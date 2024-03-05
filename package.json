@@ -9,6 +9,8 @@
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "autoprefixer": "10.4.17",
+    "clsx": "^2.1.0",
+    "face-api.js": "^0.22.2",
     "geist": "^1.2.1",
     "next": "latest",
     "postcss": "8.4.33",

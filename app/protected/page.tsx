@@ -4,6 +4,8 @@ import { createClient } from "@/utils/supabase/server";
 import FetchDataSteps from "@/components/tutorial/FetchDataSteps";
 import Header from "@/components/Header";
 import { redirect } from "next/navigation";
+import UploadImage from "@/components/tutorial/UploadImage";
+import Test from "@/components/tutorial/Test";
 
 export default async function ProtectedPage() {
   const supabase = createClient();
@@ -35,7 +37,10 @@ export default async function ProtectedPage() {
         <Header />
         <main className="flex-1 flex flex-col gap-6">
           <h2 className="font-bold text-4xl mb-4">Next steps</h2>
-          <FetchDataSteps />
+          {/* <FetchDataSteps /> */}
+          {/* <UploadImage/> */}
+          <UploadImage></UploadImage>
+          {/* <Test></Test> */}
         </main>
       </div>
 
