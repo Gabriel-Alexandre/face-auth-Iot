@@ -12,7 +12,7 @@ const Test = () => {
     useEffect(() => {
         async function executeFaceApi(imgUrl:string) {
 
-            const refImage = await faceapi.fetchImage('http://127.0.0.1:54321/storage/v1/object/public/images/public/neymar1.jpeg');
+            const refImage = await faceapi.fetchImage('http://127.0.0.1:54321/storage/v1/object/public/images/public/my_picture.png');
             const imageToCheck = await faceapi.fetchImage(imgUrl);
 
             const canvas: HTMLElement | null | HTMLCanvasElement = document.getElementById('canvas');
@@ -56,7 +56,7 @@ const Test = () => {
             })
 
         }
-        console.log(data)
+        
         if(data) {
             const nameImg: FormDataEntryValue | null | undefined | File  = data?.get('file');
             if(nameImg instanceof File) {
@@ -64,7 +64,6 @@ const Test = () => {
                 setImgUrl('http://127.0.0.1:54321/storage/v1/object/public/images/public/'+nameImg.name);
                 executeFaceApi('http://127.0.0.1:54321/storage/v1/object/public/images/public/'+nameImg.name);
             }
-
 
         }
     }, [data]);
@@ -82,7 +81,6 @@ const Test = () => {
         executeFaceApi()
     }, []);
 
-    
 
     return (
         <>
