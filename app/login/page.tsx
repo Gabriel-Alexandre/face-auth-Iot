@@ -1,35 +1,45 @@
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { SubmitButton } from "./submit-button";
+'use client'
+
+import { signIn } from "@/lib/auth/auth";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login({
   searchParams,
 }: {
   searchParams: { message: string };
 }) {
-  const signIn = async (formData: FormData) => {
-    "use server";
+  const router = useRouter();
+  const pathName = usePathname();
 
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const supabase = createClient();
+  const [loading, setLoading] = useState<boolean| undefined>(false);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      return redirect("/login?message=Could not authenticate user");
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget); 
+    const response = await signIn(formData);
+    
+    if(response[0] === 0) {
+      setLoading(false);
+      toast.error(response[1]);
+    } else {
+      setLoading(false);
+      toast.success(response[1]);
+      const newPathName = pathName.replace('login', 'protected');
+      const url = new URL(newPathName, window.location.origin);
+      const path = url.pathname + url.search;
+      router.push(path);
+      router.refresh();
     }
-
-    return redirect("/protected");
-  };
+  }
 
   return (
-    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
+    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2"> 
       <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-violet-600 dark:border-violet-700">
-        <form className="space-y-6" action="#">
+        <form className="space-y-6" onSubmit={submit}>
           <span className="text-2xl flex items-center font-extrabold dark:text-white">Entre no FaceAuth</span>
 
           <div>
@@ -71,7 +81,6 @@ export default function Login({
                   type="checkbox"
                   value=""
                   className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-                  required
                 />
               </div>
               <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-200">
@@ -86,13 +95,13 @@ export default function Login({
             </a>
           </div>
 
-          <SubmitButton
-            formAction={signIn}
+          <button
+            disabled={loading}
+            type={'submit'}
             className="w-full text-white bg-color4 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            pendingText="Entrando..."
           >
-            Entrar
-          </SubmitButton>
+            {loading ? 'Entrando...' : 'Entrar'} 
+          </button>
           <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
             Não é cadastrado ainda?{" "}
             <a
@@ -104,6 +113,7 @@ export default function Login({
           </div>
         </form>
       </div>
+      <ToastContainer position="bottom-center" autoClose={2000}/>
     </div>
   );
 }

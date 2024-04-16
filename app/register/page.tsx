@@ -1,43 +1,51 @@
-import { headers } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { SubmitButton } from "../login/submit-button";
+'use client'
+
+import { usePathname, useRouter } from "next/navigation";
+import { signUp } from "@/lib/auth/auth";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useState } from "react";
 
 export default function Register({
   searchParams,
 }: {
   searchParams: { message: string };
 }) {
+  const router = useRouter();
+  const pathName = usePathname();
 
-  const signUp = async (formData: FormData) => {
-    "use server";
+  const [loading, setLoading] = useState<boolean| undefined>(false);
 
-    const origin = headers().get("origin");
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const password2 = formData.get("password2") as string;
-    const supabase = createClient();
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget); 
+    const response = await signUp(formData);
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${origin}/auth/callback`,
-      },
-    });
-
-    if (error) {
-      return redirect("/register?message=Não foi possível autenticar usuário");
+    console.log(response)
+    
+    if(response[0] === 0) {
+      setLoading(false);
+      toast.error(response[1]);
+    } else if(response[0] === 1) {
+      setLoading(false);
+      toast.success(response[1]);
+      const newPathName = pathName.replace('register', 'protected');
+      const url = new URL(newPathName, window.location.origin);
+      const path = url.pathname + url.search;
+      router.push(path);
+      router.refresh();
+    } else {
+      setLoading(false);
+      toast.error(response[1]);
     }
-
-    return redirect("/register?message=Verifique seu email para continuar o processo de login");
-  };
+  }
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
       <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-violet-600 dark:border-violet-700">
-        <form className="space-y-6" action="#">
-          <span className="text-2xl flex items-center font-extrabold dark:text-white">Entre no FaceAuth</span>
+        <form className="space-y-6" onSubmit={submit}>
+          <span className="text-2xl flex items-center font-extrabold dark:text-white">Crie uma conta</span>
 
           <div>
             <label
@@ -94,7 +102,6 @@ export default function Register({
                   type="checkbox"
                   value=""
                   className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-                  required
                 />
               </div>
               <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-200">
@@ -109,24 +116,25 @@ export default function Register({
             </a>
           </div>
 
-          <SubmitButton
-            formAction={signUp}
+          <button
+            disabled={loading}
+            type="submit"
             className="w-full text-white bg-color4 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            pendingText="Criando conta..."
           >
-            Criar conta
-          </SubmitButton>
+            {loading ? 'Criando conta...' : 'Criar conta'}
+          </button>
           <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
             Já tem uma conta?{" "}
             <a
               href="/login"
               className="text-color4 hover:underline dark:text-color4"
             >
-              Entre na sua conta
+              Entre aqui
             </a>
           </div>
         </form>
       </div>
+      <ToastContainer position="bottom-center" autoClose={2000}/>
     </div>
   );
 }
