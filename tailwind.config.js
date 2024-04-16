@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+/** @type {import('tailwindcss')Config} */
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -13,6 +13,11 @@ module.exports = {
           background: "hsl(var(--btn-background))",
           "background-hover": "hsl(var(--btn-background-hover))",
         },
+        color1: '#3d0a49',
+        color2: '#5015bd',
+        color3: '#027fe9',
+        color4: '#00caf8',
+        color5: '#e0daf7', 
       },
     },
   },

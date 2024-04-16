@@ -1,29 +1,36 @@
+import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { SubmitButton } from "./submit-button";
+import { SubmitButton } from "../login/submit-button";
 
-export default function Login({
+export default function Register({
   searchParams,
 }: {
   searchParams: { message: string };
 }) {
-  const signIn = async (formData: FormData) => {
+
+  const signUp = async (formData: FormData) => {
     "use server";
 
+    const origin = headers().get("origin");
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const password2 = formData.get("password2") as string;
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${origin}/auth/callback`,
+      },
     });
 
     if (error) {
-      return redirect("/login?message=Could not authenticate user");
+      return redirect("/register?message=Não foi possível autenticar usuário");
     }
 
-    return redirect("/protected");
+    return redirect("/register?message=Verifique seu email para continuar o processo de login");
   };
 
   return (
@@ -63,6 +70,22 @@ export default function Login({
             />
           </div>
 
+          <div>
+            <label
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              htmlFor="password2"
+            >
+              Repetir senha
+            </label>
+            <input
+              className=" border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-400 dark:text-gray-800"
+              type="password"
+              name="password2"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+
           <div className="flex items-start">
             <div className="flex items-start">
               <div className="flex items-center h-5">
@@ -87,19 +110,19 @@ export default function Login({
           </div>
 
           <SubmitButton
-            formAction={signIn}
+            formAction={signUp}
             className="w-full text-white bg-color4 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            pendingText="Entrando..."
+            pendingText="Criando conta..."
           >
-            Entrar
+            Criar conta
           </SubmitButton>
           <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-            Não é cadastrado ainda?{" "}
+            Já tem uma conta?{" "}
             <a
-              href="/register"
+              href="/login"
               className="text-color4 hover:underline dark:text-color4"
             >
-              Crie uma conta
+              Entre na sua conta
             </a>
           </div>
         </form>
