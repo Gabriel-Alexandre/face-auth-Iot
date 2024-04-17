@@ -23,22 +23,21 @@ export default function Login({
     const response = await signIn(formData);
     
     if(response[0] === 0) {
-      setLoading(false);
       toast.error(response[1]);
     } else {
-      setLoading(false);
       toast.success(response[1]);
-      const newPathName = pathName.replace('login', 'protected');
+      const newPathName = pathName.replace('login', 'dashboard').replace('auth', 'signed');
       const url = new URL(newPathName, window.location.origin);
       const path = url.pathname + url.search;
       router.push(path);
       router.refresh();
     }
+    setLoading(false);
   }
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2"> 
-      <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-violet-600 dark:border-violet-700">
+      <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
         <form className="space-y-6" onSubmit={submit}>
           <span className="text-2xl flex items-center font-extrabold dark:text-white">Entre no FaceAuth</span>
 

@@ -2,6 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const signIn = async (formData: FormData) => {
 
@@ -45,4 +46,10 @@ export const signUp = async (formData: FormData) => {
     }
 
     return [1, "Usuário criado com sucesso!"]
-  };
+};
+
+export const signOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    return redirect("/");
+};

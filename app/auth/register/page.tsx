@@ -21,24 +21,21 @@ export default function Register({
     event.preventDefault();
     const formData = new FormData(event.currentTarget); 
     const response = await signUp(formData);
-
-    console.log(response)
     
     if(response[0] === 0) {
-      setLoading(false);
       toast.error(response[1]);
     } else if(response[0] === 1) {
-      setLoading(false);
       toast.success(response[1]);
-      const newPathName = pathName.replace('register', 'protected');
+      const newPathName = pathName.replace('register', 'dashboard').replace('auth', 'signed');
       const url = new URL(newPathName, window.location.origin);
       const path = url.pathname + url.search;
       router.push(path);
       router.refresh();
     } else {
-      setLoading(false);
       toast.error(response[1]);
     }
+
+    setLoading(false);
   }
 
   return (
