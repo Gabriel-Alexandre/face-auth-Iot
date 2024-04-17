@@ -40,6 +40,10 @@ export default function Register({
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
+      <a href="#" className="flex justify-center items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+          <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo"/>
+          FaceAuth    
+      </a>
       <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
         <form className="space-y-6" onSubmit={submit}>
           <span className="text-2xl flex items-center font-extrabold dark:text-white">Crie uma conta</span>
@@ -126,7 +130,7 @@ export default function Register({
               href="/auth/login"
               className="text-color4 hover:underline dark:text-color4"
             >
-              Entre aqui
+              Acessar conta
             </a>
           </div>
         </form>
