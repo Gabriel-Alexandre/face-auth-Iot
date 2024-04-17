@@ -104,7 +104,7 @@ export default function Login({
           <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
             Não é cadastrado ainda?{" "}
             <a
-              href="/register"
+              href="/auth/register"
               className="text-color4 hover:underline dark:text-color4"
             >
               Crie uma conta

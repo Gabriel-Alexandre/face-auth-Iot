@@ -40,7 +40,7 @@ export default function Register({
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
-      <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-violet-600 dark:border-violet-700">
+      <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
         <form className="space-y-6" onSubmit={submit}>
           <span className="text-2xl flex items-center font-extrabold dark:text-white">Crie uma conta</span>
 
@@ -123,7 +123,7 @@ export default function Register({
           <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
             Já tem uma conta?{" "}
             <a
-              href="/login"
+              href="/auth/login"
               className="text-color4 hover:underline dark:text-color4"
             >
               Entre aqui
