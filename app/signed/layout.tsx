@@ -1,7 +1,46 @@
+import { createClient } from "@/utils/supabase/server";
 import Toggle from "./components/toggle";
 
 async function SignedLayout({ children }: React.PropsWithChildren) {
-  let toggle = false;
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  function formatElapsedTime(dateTime: Date): string {
+    const currentDate = new Date();
+    const difference = currentDate.getTime() - dateTime.getTime();
+    const msPerMonth = 1000 * 60 * 60 * 24 * 30.4375; // média de dias em um mês
+    const msPerYear = msPerMonth * 12;
+    
+    const monthsElapsed = Math.floor(difference / msPerMonth);
+    const yearsElapsed = Math.floor(monthsElapsed / 12);
+    
+    let elapsedTimeStr = "";
+
+    if (yearsElapsed === 0) {
+        if (monthsElapsed === 1) {
+            elapsedTimeStr = "criado há 1 mês";
+        } else {
+            elapsedTimeStr = `criado há ${monthsElapsed} meses`;
+        }
+    } else if (yearsElapsed === 1) {
+        if (monthsElapsed % 12 === 0) {
+            elapsedTimeStr = "criado há 1 ano";
+        } else {
+            elapsedTimeStr = `criado há 1 ano e ${monthsElapsed % 12} meses`;
+        }
+    } else {
+        if (monthsElapsed % 12 === 0) {
+            elapsedTimeStr = `criado há ${yearsElapsed} anos`;
+        } else {
+            elapsedTimeStr = `criado há ${yearsElapsed} anos e ${monthsElapsed % 12} meses`;
+        }
+    }
+
+    return elapsedTimeStr;
+}
 
   return (
     <div>
@@ -111,19 +150,19 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
             </ul>
 
             <div className="flex flex-1 items-end mb-6">
-              <div className="flex items-center gap-4">
+              <div className="flex justify-center items-center gap-2 ml-2">
                 <img
-                  className="w-10 h-10 rounded-full"
-                  src={"https://avatars.githubusercontent.com/u/82059012?v=4"}
+                  className="w-10 h-10 rounded-full bg-white"
+                  src={"http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z"}
                 />
-                <div className="font-medium dark:text-white">
-                  <div>Gabriel Alexandre</div>
+                <div className="font-medium text-sm dark:text-white">
+                  <div>{user?.email}</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Online há 1 hora
+                    {formatElapsedTime(new Date(`${user?.created_at ? user?.created_at : '1 mês'}`))}
                   </div>
                 </div>
                 
-                <Toggle/>
+                <Toggle user={user}/>
 
               </div>
             </div>

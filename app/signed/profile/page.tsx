@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export default async function VerifyAuthPage() {
+export default async function ProfilePage() {
   const supabase = createClient();
 
   const {
@@ -14,7 +14,7 @@ export default async function VerifyAuthPage() {
 
   return (
     <div>
-        oiiiiiiiiiiiiiiiiii
+      oiiiiii
     </div>
   );
 }

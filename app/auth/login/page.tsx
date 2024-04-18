@@ -38,7 +38,7 @@ export default function Login({
   return (
     
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2"> 
-      <a href="#" className="flex justify-center items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+      <a href="/" className="flex justify-center items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
           <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo"/>
           FaceAuth    
       </a>
