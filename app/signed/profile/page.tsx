@@ -13,40 +13,6 @@ export default async function ProfilePage() {
     return redirect("/auth/login");
   }
 
-  function formatElapsedTime(dateTime: Date): string {
-    const currentDate = new Date();
-    const difference = currentDate.getTime() - dateTime.getTime();
-    const msPerMonth = 1000 * 60 * 60 * 24 * 30.4375; // média de dias em um mês
-    const msPerYear = msPerMonth * 12;
-    
-    const monthsElapsed = Math.floor(difference / msPerMonth);
-    const yearsElapsed = Math.floor(monthsElapsed / 12);
-    
-    let elapsedTimeStr = "";
-
-    if (yearsElapsed === 0) {
-        if (monthsElapsed === 1) {
-            elapsedTimeStr = "criado há 1 mês";
-        } else {
-            elapsedTimeStr = `criado há ${monthsElapsed} meses`;
-        }
-    } else if (yearsElapsed === 1) {
-        if (monthsElapsed % 12 === 0) {
-            elapsedTimeStr = "criado há 1 ano";
-        } else {
-            elapsedTimeStr = `criado há 1 ano e ${monthsElapsed % 12} meses`;
-        }
-    } else {
-        if (monthsElapsed % 12 === 0) {
-            elapsedTimeStr = `criado há ${yearsElapsed} anos`;
-        } else {
-            elapsedTimeStr = `criado há ${yearsElapsed} anos e ${monthsElapsed % 12} meses`;
-        }
-    }
-
-    return elapsedTimeStr;
-  }
-
   return (
     <div className="w-full flex justify-center">
 
