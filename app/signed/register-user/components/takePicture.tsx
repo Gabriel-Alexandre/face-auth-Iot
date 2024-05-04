@@ -5,33 +5,6 @@ import { useState } from "react";
 export default function TakePicture(user: any) {
   const [loading, setLoading] = useState<boolean | undefined>(false);
 
-  const submit = (event: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const phone = formData.get('phone');
-    const date = formData.get('date');
-    const file_image = formData.get('file_image');
-    console.log(name, email, phone, date, file_image);
-
-    // if (response[0] === 0) {
-    //   toast.error(response[1]);
-    // } else {
-    //   toast.success(response[1]);
-    //   const newPathName = pathName
-    //     .replace("login", "dashboard")
-    //     .replace("auth", "signed");
-    //   const url = new URL(newPathName, window.location.origin);
-    //   const path = url.pathname + url.search;
-    //   router.push(path);
-    //   router.refresh();
-    // }
-
-    setLoading(false);
-  };
-
   return (
     <div>
       <img
