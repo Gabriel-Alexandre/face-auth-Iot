@@ -40,11 +40,11 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
     }
 
     return elapsedTimeStr;
-}
+  }
 
   return (
-    <div>
-      <div className="w-full">
+    <div className="w-full flex-grow">
+      <div className="w-full flex-grow">
         <button
           data-drawer-target="logo-sidebar"
           data-drawer-toggle="logo-sidebar"
@@ -128,7 +128,7 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
               </li>
 
               {/* Verificar Autenticador*/}
-              <li>
+              {/* <li>
                 <a
                   href="/signed/verify-auth"
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -146,7 +146,7 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
                     Verificar Autenticador
                   </span>
                 </a>
-              </li>
+              </li> */}
             </ul>
 
             <div className="flex flex-1 items-end mb-6">
@@ -169,7 +169,7 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
           </div>
         </aside>
 
-        <div className="p-4 sm:ml-64">{children}</div>
+        <div className="p-4 flex-1 sm:ml-64">{children}</div>
       </div>
     </div>
   );
