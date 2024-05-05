@@ -60,7 +60,7 @@ const Test = () => {
         if(data) {
             const nameImg: FormDataEntryValue | null | undefined | File  = data?.get('file');
             if(nameImg instanceof File) {
-                console.log('http://127.0.0.1:54321/storage/v1/object/public/images/public/'+nameImg.name)
+                // console.log('http://127.0.0.1:54321/storage/v1/object/public/images/public/'+nameImg.name)
                 setImgUrl('http://127.0.0.1:54321/storage/v1/object/public/images/public/'+nameImg.name);
                 executeFaceApi('http://127.0.0.1:54321/storage/v1/object/public/images/public/'+nameImg.name);
             }

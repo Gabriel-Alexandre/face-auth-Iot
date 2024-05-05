@@ -33,7 +33,7 @@ export const signUp = async (formData: FormData) => {
         return [2, 'As senhas digitadas não são iguais.']
     }
 
-    const { error } = await supabase.auth.signUp({
+    const { error, data } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -42,10 +42,10 @@ export const signUp = async (formData: FormData) => {
     });
 
     if (error) {
-        return [0, "Erro ao registrar usuário."]
+        return [0, "Erro ao registrar usuário.", data]
     }
 
-    return [1, "Usuário criado com sucesso!"]
+    return [1, "Usuário criado com sucesso!", data]
 };
 
 export const signOut = async () => {
@@ -53,3 +53,15 @@ export const signOut = async () => {
     await supabase.auth.signOut();
     return redirect("/");
 };
+
+export const changePassword = async (new_password: string, email: string) => {
+    const supabase = createClient();
+
+     const { error, data } =  await supabase.auth.updateUser({ password: new_password, email: email })
+
+     if (error) {
+        return [0, "Erro ao mudar senha.", data]
+    }
+
+    return [1, "Senha alterada com sucesso!", data]
+}

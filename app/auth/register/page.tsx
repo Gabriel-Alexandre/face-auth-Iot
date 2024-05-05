@@ -5,6 +5,7 @@ import { signUp } from "@/lib/auth/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from "react";
+import { createUserTable } from "@/lib/users/actions";
 
 export default function Register({
   searchParams,
@@ -21,18 +22,27 @@ export default function Register({
     event.preventDefault();
     const formData = new FormData(event.currentTarget); 
     const response = await signUp(formData);
+    const textMessage: string = response[1].toString();
+    const response_data_user:any = response[2];
+
+    const data_user = { 
+      email: response_data_user.user.email,
+      user_supabase_id: response_data_user.user.id
+    }
+
+    const response2 = await createUserTable(data_user);
     
-    if(response[0] === 0) {
-      toast.error(response[1]);
+    if(response[0] === 0 || response2[0] === 0) {
+      toast.error(textMessage);
     } else if(response[0] === 1) {
-      toast.success(response[1]);
+      toast.success(textMessage);
       const newPathName = pathName.replace('register', 'dashboard').replace('auth', 'signed');
       const url = new URL(newPathName, window.location.origin);
       const path = url.pathname + url.search;
       router.push(path);
       router.refresh();
     } else {
-      toast.error(response[1]);
+      toast.error(textMessage);
     }
 
     setLoading(false);

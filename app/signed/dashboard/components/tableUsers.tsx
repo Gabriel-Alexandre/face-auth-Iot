@@ -43,9 +43,9 @@ export default function TableUsers(user: any) {
   },
 ]
 
-  const renderRow = (name:string, email:string, status:number) => {
+  const renderRow = (name:string, email:string, status:number, index: number) => {
     return (
-      <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+      <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
         <th
           scope="row"
           className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
@@ -97,9 +97,9 @@ export default function TableUsers(user: any) {
         </thead>
 
         <tbody>
-          {dataMock.map(item => {
+          {dataMock.map((item , index) => {
             return (
-              renderRow(item.name, item.email, item.status)
+              renderRow(item.name, item.email, item.status, index)
             );
           })}
         </tbody>

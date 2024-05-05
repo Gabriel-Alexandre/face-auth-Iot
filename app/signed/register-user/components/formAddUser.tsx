@@ -14,7 +14,7 @@ export default function FormAddUser({...props}) {
     const phone = formData.get('phone');
     const date = formData.get('date');
     const file_image = formData.get('file_image');
-    console.log(name, email, phone, date, file_image);
+    // console.log(name, email, phone, date, file_image);
 
     // if (response[0] === 0) {
     //   toast.error(response[1]);
