@@ -1,12 +1,8 @@
-import DeployButton from "@/components/DeployButton";
-import AuthButton from "@/components/AuthButton";
 import { createClient } from "@/utils/supabase/server";
-import FetchDataSteps from "@/components/tutorial/FetchDataSteps";
-import Header from "@/components/Header";
 import { redirect } from "next/navigation";
-import UploadImage from "@/components/tutorial/UploadImage";
-import Test from "@/components/tutorial/Test";
 import TableUsers from "./components/tableUsers";
+import PizzaChart from "./components/pizzaChart";
+import BarChart from "./components/barChart";
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -28,13 +24,31 @@ export default async function DashboardPage() {
           <TableUsers user={user}/>
         </div>
 
-        <div className="w-1/2">
-          <div>
-            bar chart
+        <div className="w-1/2 pl-4 flex flex-col justify-between">
+          <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <BarChart/>
           </div>
 
-          <div>
-            resume
+          <div className="mt-4 flex bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            
+            <div>
+              <h3 className="pb-8 pt-2 text-center text-lg font-semibold text-gray-900 whitespace-nowrap dark:text-white">Resumo: Logs do Sistema</h3>
+              
+              <div className="px-6 flex">
+                <div className="flex flex-col items-center">
+                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade Total: {"1000"}</span><br/>
+                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade{`${'(Sucesso): '}`}{"600"}</span><br/>
+                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade{`${'(Erro): '}`}{"600"}</span>
+                </div>
+              </div>
+
+            </div>
+
+            <div className="flex justify-center bg-white border-l border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+              <div className="flex flex-col px-12 py-2">
+                <PizzaChart/>
+              </div>
+            </div>
           </div>
         </div>
       </div>

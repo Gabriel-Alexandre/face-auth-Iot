@@ -57,7 +57,7 @@ export default async function FormProfile(user: any) {
           placeholder={""}
         />
       </div>
-      <h5 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+      <h5 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
         {"Mudar senha"}
       </h5>
       <div className="mb-5">
