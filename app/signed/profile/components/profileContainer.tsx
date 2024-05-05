@@ -33,7 +33,7 @@ const ProfileContainer = (user: any) => {
           toast.success(response[1]);
         }
 
-        // window.location.reload();
+        window.location.reload();
       })
       .catch(() => toast.error("Erro ao processar imagem."));
   };

@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import Toggle from "./components/toggle";
+import { getUserById } from "@/lib/users/queries";
 
 async function SignedLayout({ children }: React.PropsWithChildren) {
   const supabase = createClient();
@@ -7,6 +8,8 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const img_url = (await getUserById(user?.id))[2].image_url;
 
   function formatElapsedTime(dateTime: Date): string {
     const currentDate = new Date();
@@ -151,7 +154,9 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
               <div className="flex justify-center items-center gap-2 ml-2">
                 <img
                   className="w-10 h-10 rounded-full bg-white"
-                  src={"http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z"}
+                  src={
+                    img_url ? img_url 
+                    : "http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z"}
                 />
                 <div className="font-medium text-sm dark:text-white">
                   <div>{user?.email}</div>
@@ -160,7 +165,7 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
                   </div>
                 </div>
                 
-                <Toggle user={user}/>
+                <Toggle />
 
               </div>
             </div>
