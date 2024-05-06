@@ -1,36 +1,40 @@
 'use client'
 
-import { useState } from "react";
+import { createClientTable, uploadImageUser } from "@/lib/users/actions";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function FormAddUser({...props}) {
-  const [loading, setLoading] = useState<boolean | undefined>(false);
+const FormAddUser = ({...props}) => {
 
   const submit = async  (event: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const phone = formData.get('phone');
-    const date = formData.get('date');
+    const name:any = formData.get('name');
+    const email:any = formData.get('email');
+    const phone:any = formData.get('phone');
+    const date:any = formData.get('date');
     const file_image = formData.get('file_image');
-    // console.log(name, email, phone, date, file_image);
 
-    // if (response[0] === 0) {
-    //   toast.error(response[1]);
-    // } else {
-    //   toast.success(response[1]);
-    //   const newPathName = pathName
-    //     .replace("login", "dashboard")
-    //     .replace("auth", "signed");
-    //   const url = new URL(newPathName, window.location.origin);
-    //   const path = url.pathname + url.search;
-    //   router.push(path);
-    //   router.refresh();
-    // }
+    const fileString = await fileToString(file_image);
+    const response:any = await createClientTable(name, email, phone, date, props.user.id,  fileString);
 
-    setLoading(false);
+    if (response[0] === 0) {
+      toast.error(response[1]);
+    } else {
+      toast.success(response[1]);
+    }
   };
+
+  function fileToString(file: any): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(reader.error);
+
+      reader.readAsDataURL(file);
+    });
+  }
 
   return (
     <form className="max-w-sm mx-auto" onSubmit={submit}>
@@ -44,6 +48,7 @@ export default function FormAddUser({...props}) {
           name="name"
           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
           placeholder={""}
+          required
         />
       </div>
       <div className="mb-5">
@@ -56,6 +61,7 @@ export default function FormAddUser({...props}) {
           name="email"
           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
           placeholder={"name@faceAuth.com"}
+          required
         />
       </div>
       
@@ -67,7 +73,6 @@ export default function FormAddUser({...props}) {
           type="tel"
           id="phone"
           name="phone"
-          // pattern="\([0-9]{2}\) [0-9]{5}-[0-9]{4}"
           placeholder={"(99) 99999-999"}
           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
         />
@@ -81,12 +86,13 @@ export default function FormAddUser({...props}) {
           type="date"
           id="date"
           name="date"
+          required
           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
         />
       </div>
 
       <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adicionar imagem do usuário</label>
-      <input className="block mb-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" name="file_image" id="file_input" type="file" accept="image/png, image/jpeg"/>
+      <input required className="block mb-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" name="file_image" id="file_input" type="file" accept="image/png, image/jpeg"/>
 
       <div className="inline-flex items-center justify-center w-full">
           <hr className="w-full h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
@@ -103,6 +109,9 @@ export default function FormAddUser({...props}) {
           Cadastrar usuário
         </button>
       </div>
+      <ToastContainer position="bottom-center" autoClose={2000} />
     </form>
   );
 }
+
+export default FormAddUser;

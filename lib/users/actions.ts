@@ -23,6 +23,67 @@ export const createUserTable = async (data_user: any) => {
     return [1, "Usuário criado com sucesso!", data]
 }
 
+export const createClientTable = async (name: string, email: string, phone: string, date: string, user_id: string, fileString:string) => {
+    const supabase = createClient();
+    const dataUrl: string = fileString;
+    const file: Blob = stringToBlob(dataUrl);
+    const now = new Date();
+    const hournow = now.toISOString();
+    
+
+    const { error: errorimg, data: dataimg } = await supabase.storage
+    .from('images')
+    .upload('public/'+user_id+hournow+'.jpg', file, {
+        cacheControl: '3600',
+        upsert: true,
+    });
+
+    if(dataimg) {
+        const { data: data1 } = await supabase
+        .storage
+        .from('images')
+        .getPublicUrl(dataimg.path);
+
+        const { data, error } = await supabase
+            .from('user')
+            .insert([
+                {
+                    name: name,
+                    email: email,
+                    image_url: data1.publicUrl,
+                    phone: phone,
+                    date_birth: date,
+                    user_supabase_id: user_id
+                },
+            ]).select('id').single();
+            
+            if(data) {
+            const user_id:{
+                id: any;
+            } | null = data.id;
+            const { data: data1, error: error1 } = await supabase
+            .from('group_users')
+            .insert([
+                {
+                    user_id: user_id,
+                    group_id: 'b363e126-bd55-4e95-a98b-38a63292ee37',
+                    status: 1
+                },
+            ]);
+    
+            if (error1) {
+                return [0, "Erro ao registrar cliente.", data]
+            }
+        }
+
+        if (error) {
+            return [0, `${email} já existe.`, data]
+        }
+    }
+
+    return [1, "Cliente criado com sucesso!", '']
+}
+
 export const updateUserNameTable = async (data_user: any , user_id:any) => {
     const supabase = createClient();
 
@@ -47,6 +108,7 @@ export const uploadImageUser = async (fileString: any, user_id: string) => {
     const supabase = createClient();
     const now = new Date();
     const hournow = now.toISOString();
+
     const { error, data } = await supabase.storage
     .from('users')
     .upload('public/'+user_id+hournow+'.jpg', file, {
@@ -59,8 +121,6 @@ export const uploadImageUser = async (fileString: any, user_id: string) => {
         .storage
         .from('users')
         .getPublicUrl(data.path);
-
-        console.log(data1)
 
         const { data: data2, error: error2 } = await supabase
         .from('user')

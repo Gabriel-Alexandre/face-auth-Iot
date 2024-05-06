@@ -11,8 +11,11 @@ export default async function ProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const img_url = (await getUserById(user?.id))[2].image_url;
-  const name = (await getUserById(user?.id))[2].name;
+  const aux:any = (await getUserById(user?.id))
+  const img_url_rep = aux[2].image_url;
+  const img_url = img_url_rep ? img_url_rep : "http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z";
+
+  const name = aux[2].name;
 
   if (!user) {
     return redirect("/auth/login");
