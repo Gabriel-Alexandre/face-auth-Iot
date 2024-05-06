@@ -1,6 +1,6 @@
 'use client'
 
-import { createClientTable, uploadImageUser } from "@/lib/users/actions";
+import { createClientTable, createClientTableV2, uploadImageUser } from "@/lib/users/actions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -15,13 +15,23 @@ const FormAddUser = ({...props}) => {
     const date:any = formData.get('date');
     const file_image = formData.get('file_image');
 
-    const fileString = await fileToString(file_image);
-    const response:any = await createClientTable(name, email, phone, date, props.user.id,  fileString);
-
-    if (response[0] === 0) {
-      toast.error(response[1]);
+    if(props.imgOfTakePicture === false) {
+      const fileString = await fileToString(file_image);
+      const response:any = await createClientTable(name, email, phone, date, props.user.id,  fileString);
+  
+      if (response[0] === 0) {
+        toast.error(response[1]);
+      } else {
+        toast.success(response[1]);
+      }
     } else {
-      toast.success(response[1]);
+      const response:any = await createClientTableV2(name, email, phone, date, props.user.id, props.imgURL);
+  
+      if (response[0] === 0) {
+        toast.error(response[1]);
+      } else {
+        toast.success(response[1]);
+      }
     }
   };
 
@@ -91,25 +101,34 @@ const FormAddUser = ({...props}) => {
         />
       </div>
 
-      <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adicionar imagem do usuário</label>
-      <input required className="block mb-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" name="file_image" id="file_input" type="file" accept="image/png, image/jpeg"/>
-
-      <div className="inline-flex items-center justify-center w-full">
-          <hr className="w-full h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
-          <span className="absolute px-3 font-medium text-gray-900 -translate-x-1/4 bg-white left-1/8 dark:text-white dark:bg-gray-900">ou</span>
+      
+      {props.imgOfTakePicture ? null :
+      <div>
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Adicionar imagem do usuário</label>
+        <input required className="block mb-2 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" name="file_image" id="file_input" type="file" accept="image/png, image/jpeg"/>
+        {!props.collapsable ? <div className="inline-flex items-center justify-center w-full">
+            <hr className="w-full h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
+            <span className="absolute px-3 font-medium text-gray-900 -translate-x-1/4 bg-white left-1/8 dark:text-white dark:bg-gray-900">ou</span>
+        </div>: null}
       </div>
+      }
 
       <div className="w-full flex flex-col justify-center">
         {!props.collapsable ? <button type="button" className="mb-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" onClick={()=>props.changeCollapsable()}>Tirar foto</button> :
         null }
-        <button
+        {!props.collapsable ? <button
           type="submit"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           Cadastrar usuário
-        </button>
+        </button> :
+        <button
+        type="submit"
+        className="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+      >
+        Cadastrar usuário
+      </button>}
       </div>
-      <ToastContainer position="bottom-center" autoClose={2000} />
     </form>
   );
 }

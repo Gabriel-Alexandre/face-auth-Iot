@@ -84,6 +84,49 @@ export const createClientTable = async (name: string, email: string, phone: stri
     return [1, "Cliente criado com sucesso!", '']
 }
 
+export const createClientTableV2 = async (name: string, email: string, phone: string, date: string, user_id: string, fileString:string) => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from('user')
+        .insert([
+            {
+                name: name,
+                email: email,
+                image_url: fileString,
+                phone: phone,
+                date_birth: date,
+                user_supabase_id: user_id
+            },
+        ]).select('id').single();
+        
+        if(data) {
+        const user_id:{
+            id: any;
+        } | null = data.id;
+        const { data: data1, error: error1 } = await supabase
+        .from('group_users')
+        .insert([
+            {
+                user_id: user_id,
+                group_id: 'b363e126-bd55-4e95-a98b-38a63292ee37',
+                status: 1
+            },
+        ]);
+
+        if (error1) {
+            return [0, "Erro ao registrar cliente.", data]
+        }
+    }
+
+    if (error) {
+        return [0, `${email} já existe.`, data]
+    }
+    
+
+    return [1, "Cliente criado com sucesso!", '']
+}
+
 export const updateUserNameTable = async (data_user: any , user_id:any) => {
     const supabase = createClient();
 
