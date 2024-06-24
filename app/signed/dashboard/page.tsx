@@ -36,9 +36,9 @@ export default async function DashboardPage() {
               
               <div className="px-6 flex">
                 <div className="flex flex-col items-center">
-                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade Total: {"1000"}</span><br/>
-                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade{`${'(Sucesso): '}`}{"600"}</span><br/>
-                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade{`${'(Erro): '}`}{"600"}</span>
+                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade Total: {"1050"}</span><br/>
+                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade{`${'(Sucesso): '}`}{"700"}</span><br/>
+                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade{`${'(Erro): '}`}{"350"}</span>
                 </div>
               </div>
 

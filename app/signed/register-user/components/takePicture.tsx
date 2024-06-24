@@ -40,7 +40,6 @@ const TakePicture = (props: any) => {
           .from("images")
           .getPublicUrl(folderName);
         props.setImgURL(data.publicUrl);
-        console.log('oiiiiiii', props)
         setLoading(false);
         setImageResponse(true);
       }

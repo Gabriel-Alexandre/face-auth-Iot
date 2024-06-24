@@ -62,9 +62,14 @@ import {
     labels,
     datasets: [
       {
-        label: 'Quantidade de Logs',
-        data: [100, 200, 300, 400, 300, 300, 200],
+        label: 'Quantidade de Logs (Sucesso)',
+        data: [100, 101, 97, 85, 102, 92, 94],
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+      {
+        label: 'Quantidade de Logs (Error)',
+        data: [47, 46, 55, 51, 50, 60, 69],
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
       },
     ],
   };

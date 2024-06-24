@@ -165,7 +165,7 @@ export default async function Index() {
             </svg>
         </a>
         <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-            Desbloqueie o Futuro da Autenticação Facial com FacileAuth
+            Desbloqueie o Futuro da Autenticação Facial com FaceAuth
         </h1>
         <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
             Transforme a Segurança em uma Experiência Sem Esforço com Nossa Solução de Autenticação Facial de Última Geração!   

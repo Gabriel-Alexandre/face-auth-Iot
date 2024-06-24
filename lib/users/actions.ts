@@ -33,7 +33,11 @@ export const createClientTable = async (name: string, email: string, phone: stri
 
     const { error: errorimg, data: dataimg } = await supabase.storage
     .from('images')
-    .upload('public/'+user_id+hournow+'.jpg', file, {
+    // .upload('public/'+user_id+hournow+'.jpg', file, {
+    //     cacheControl: '3600',
+    //     upsert: true,
+    // });
+    .upload('public/'+name+'.jpg', file, {
         cacheControl: '3600',
         upsert: true,
     });
@@ -66,7 +70,7 @@ export const createClientTable = async (name: string, email: string, phone: stri
             .insert([
                 {
                     user_id: user_id,
-                    group_id: 'b363e126-bd55-4e95-a98b-38a63292ee37',
+                    group_id: 'd942385c-1204-4b9f-aedd-1a962ab3dde7',
                     status: 1
                 },
             ]);
@@ -154,7 +158,7 @@ export const uploadImageUser = async (fileString: any, user_id: string) => {
 
     const { error, data } = await supabase.storage
     .from('users')
-    .upload('public/'+user_id+hournow+'.jpg', file, {
+    .upload('public/'+user_id[3]+hournow[1]+'.jpg', file, {
         cacheControl: '3600',
         upsert: true,
     });

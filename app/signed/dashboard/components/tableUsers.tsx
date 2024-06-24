@@ -27,18 +27,18 @@ export default function TableUsers(user: any) {
     status: 0
   },
   {
-    name: "Gabriel Lindo",
-    email: "gabriel@flowbite.com",
-    status: 1
-  },
-  {
-    name: "Laura enjoadinha",
-    email: "laura@flowbite.com",
-    status: 1
-  },
-  {
-    name: "Teste teste",
+    name: "Teste 1",
     email: "teste@flowbite.com",
+    status: 1
+  },
+  {
+    name: "Teste 2",
+    email: "teste2@flowbite.com",
+    status: 1
+  },
+  {
+    name: "Teste 3",
+    email: "teste3@flowbite.com",
     status: 0
   },
 ]
@@ -87,7 +87,7 @@ export default function TableUsers(user: any) {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
-              Usuário
+              Cliente
             </th>
             <th scope="col" className="px-6 py-3">
               Status

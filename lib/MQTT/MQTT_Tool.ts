@@ -7,6 +7,7 @@ import { createClient } from "@/utils/supabase/server";
 const client = createMQTTClient();
 
 export async function connectMQTT() {
+    // console.log(client)
     console.log(client.connected)
     if(!client.connected) {
         client.on('connect', () => {
@@ -14,7 +15,7 @@ export async function connectMQTT() {
             client.subscribe([SUBTOPIC], () => {
               console.log(`Subscribe to topic '${SUBTOPIC}'`);
             })
-        });
+        }); 
     }
 }
 
@@ -55,7 +56,7 @@ export async function listeningAndSaveImage() {
         if(response==="123START123") {
             imgBase64 = "";
         } else if(response==="123END123") {
-            const fileName = `${generateUid()}.jpg`;
+            const fileName = `${generateRandomName()}.jpg`;
             // console.log(imgBase64)
             const file = base64toBlob(imgBase64);
 
@@ -64,7 +65,7 @@ export async function listeningAndSaveImage() {
                 .from('images')
                 .upload('public/'+fileName, file, {
                     cacheControl: '3600',
-                    upsert: false,
+                    upsert: true,
                 });
 
                 if(error) {
@@ -107,11 +108,24 @@ function base64toBlob(base64Data: string): Blob | null {
     return blob;
 }
 
-function generateUid() {
-    // Gera e retorna um UID aleatório
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0,
-            v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
+// function generateUid() {
+//     // Gera e retorna um UID aleatório
+//     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+//         var r = Math.random() * 16 | 0,
+//             v = c == 'x' ? r : (r & 0x3 | 0x8);
+//         return v.toString(16);
+//     });
+// }
+
+function generateRandomName() {
+    var adjectives = ['Red', 'Green', 'Blue', 'Yellow', 'Orange', 'Purple', 'Pink', 'Black', 'White', 'Silver', 'Gold', 'Brown'];
+    var nouns = ['Lion', 'Tiger', 'Bear', 'Wolf', 'Eagle', 'Shark', 'Snake', 'Elephant', 'Dragon', 'Phoenix', 'Unicorn', 'Mermaid'];
+
+    var randomAdjectiveIndex = Math.floor(Math.random() * adjectives.length);
+    var randomNounIndex = Math.floor(Math.random() * nouns.length);
+
+    var randomAdjective = adjectives[randomAdjectiveIndex];
+    var randomNoun = nouns[randomNounIndex];
+
+    return randomAdjective + randomNoun;
 }

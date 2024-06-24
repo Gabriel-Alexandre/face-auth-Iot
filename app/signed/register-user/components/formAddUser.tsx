@@ -15,9 +15,10 @@ const FormAddUser = ({...props}) => {
     const date:any = formData.get('date');
     const file_image = formData.get('file_image');
 
-    if(props.imgOfTakePicture === false) {
+    if(!props.imgURL) {
       const fileString = await fileToString(file_image);
-      const response:any = await createClientTable(name, email, phone, date, props.user.id,  fileString);
+      const response:any = await createClientTable(name, email, phone, date, props.user.id, fileString);
+      console.log(response)
   
       if (response[0] === 0) {
         toast.error(response[1]);
@@ -26,7 +27,7 @@ const FormAddUser = ({...props}) => {
       }
     } else {
       const response:any = await createClientTableV2(name, email, phone, date, props.user.id, props.imgURL);
-  
+      console.log(response)
       if (response[0] === 0) {
         toast.error(response[1]);
       } else {
@@ -129,6 +130,7 @@ const FormAddUser = ({...props}) => {
         Cadastrar usuário
       </button>}
       </div>
+      <ToastContainer position="bottom-center" autoClose={2000} limit={1} />
     </form>
   );
 }

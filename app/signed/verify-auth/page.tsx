@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import VerifyUser from "./components/verifyUser";
 
 export default async function VerifyAuthPage() {
   const supabase = createClient();
@@ -13,8 +14,8 @@ export default async function VerifyAuthPage() {
   }
 
   return (
-    <div>
-        oiiiiiiiiiiiiiiiiii
+    <div className="w-full flex justify-center">
+      <VerifyUser/>
     </div>
   );
 }

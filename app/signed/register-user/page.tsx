@@ -16,7 +16,7 @@ export default async function RegisterUserPage() {
 
   return (
     <div className="w-full flex flex-col justify-center">
-      <h4 className="text-2xl font-bold dark:text-white mb-4 ml-4 text-start">Cadastrar Usuários</h4>
+      <h4 className="text-2xl font-bold dark:text-white mb-4 ml-4 text-start">Cadastrar Clientes</h4>
 
       <ContainerForm user={user}/>
     </div>

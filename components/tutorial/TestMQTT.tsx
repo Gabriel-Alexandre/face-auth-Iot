@@ -24,8 +24,8 @@ const TestMQTT = () => {
       await Promise.all([
         faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
         faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-        faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-        faceapi.nets.ageGenderNet.loadFromUri('/models'),
+        // faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+        // faceapi.nets.ageGenderNet.loadFromUri('/models'),
       ]);
     }
 
@@ -41,12 +41,6 @@ const TestMQTT = () => {
       setErroMessage("Erro ao tirar foto.");
     }
   }
-
-  // ideal é pensar primeiro na lógica da aplicação para saber efetivamente como vou obter as informações de imagem salva com sucesso etc.
-  // a minha implementação agora, é apenas uma ideia de como fazer
-
-  // estou escutando eventos sobre cada mudança que o ocorre no bucket de imagens (devo pensar em como separar isso para aplicação de uma forma geral)
-  // logo, todas imagens criadas vão ser recebidas aqui
 
   const supabase = createClient();
 

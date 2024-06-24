@@ -7,11 +7,11 @@ import { Pie } from "react-chartjs-2";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const data = {
-  labels: ["Red", "Blue", "Yellow"],
+  labels: ["Falha na autenticação", "Tempo esgotado", "Outros"],
   datasets: [
     {
       label: "# of Votes",
-      data: [12, 19, 3],
+      data: [52, 11, 6],
       backgroundColor: [
         "rgba(255, 99, 132, 0.2)",
         "rgba(54, 162, 235, 0.2)",

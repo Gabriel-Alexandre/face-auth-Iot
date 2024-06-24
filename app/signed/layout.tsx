@@ -9,7 +9,10 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const aux:any = (await getUserById(user?.id))
+  let aux:any = (await getUserById(user?.id))
+  if(!aux) {
+    aux = ['', '', {image_url: "http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z"}]
+  } 
   const img_url_rep = aux[2].image_url;
   const img_url = img_url_rep ? img_url_rep : "http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z";
 
@@ -126,13 +129,13 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
                   </svg>
 
                   <span className="flex-1 ms-3 whitespace-nowrap">
-                    Cadastrar usuário
+                    Cadastrar Cliente
                   </span>
                 </a>
               </li>
 
               {/* Verificar Autenticador*/}
-              {/* <li>
+              <li>
                 <a
                   href="/signed/verify-auth"
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -150,7 +153,7 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
                     Verificar Autenticador
                   </span>
                 </a>
-              </li> */}
+              </li>
             </ul>
 
             <div className="flex flex-1 items-end mb-6">
