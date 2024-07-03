@@ -118,14 +118,15 @@ function base64toBlob(base64Data: string): Blob | null {
 // }
 
 function generateRandomName() {
-    var adjectives = ['Red', 'Green', 'Blue', 'Yellow', 'Orange', 'Purple', 'Pink', 'Black', 'White', 'Silver', 'Gold', 'Brown'];
-    var nouns = ['Lion', 'Tiger', 'Bear', 'Wolf', 'Eagle', 'Shark', 'Snake', 'Elephant', 'Dragon', 'Phoenix', 'Unicorn', 'Mermaid'];
+    var adjectives = ['Brave', 'Clever', 'Mighty', 'Swift', 'Fierce', 'Gentle', 'Bold', 'Wise', 'Noble', 'Radiant', 'Majestic', 'Sly', 'Brave1', 'Clever1', 'Mighty1', 'Swift1', 'Fierce1', 'Gentle1', 'Bold1', 'Wise1', 'Noble1', 'Radiant1', 'Majestic1', 'Sly1'];
+var nouns = ['Falcon', 'Panther', 'Leopard', 'Hawk', 'Griffin', 'Kraken', 'Sphinx', 'Basilisk', 'Wyvern', 'Hydra', 'Cerberus', 'Minotaur','Falcon1', 'Panther1', 'Leopard1', 'Hawk1', 'Griffin1', 'Kraken1', 'Sphinx1', 'Basilisk1', 'Wyvern1', 'Hydra1', 'Cerberus1', 'Minotaur1'];
 
     var randomAdjectiveIndex = Math.floor(Math.random() * adjectives.length);
     var randomNounIndex = Math.floor(Math.random() * nouns.length);
+    var randomNumber = Math.floor(Math.random() * 10000);
 
     var randomAdjective = adjectives[randomAdjectiveIndex];
     var randomNoun = nouns[randomNounIndex];
 
-    return randomAdjective + randomNoun;
+    return randomAdjective + randomNoun + `${randomNumber}`;
 }
