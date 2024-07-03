@@ -13,6 +13,7 @@ const VerifyUser = (props: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [imgURL, setImgURL] = useState<string>();
   const [users, setUsers] = useState<any>();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean| null>(null);
 
   let gam1 = 1;
   let gam2 = 1;
@@ -80,12 +81,14 @@ const VerifyUser = (props: any) => {
         // }
         if(response === 1) {
           if(gam3) {
-            toast.success("Cliente Autenticado com Sucesso.");
+            setIsAuthenticated(true);
+            // toast.success("Cliente Autenticado com Sucesso.");
             gam3 = 0;
           }
         } else {
           if(gam2) {
-            toast.error("Cliente Não Autenticado.");
+            setIsAuthenticated(false);
+            // toast.error("Cliente Não Autenticado.");
             gam2 = 0;
           }
         }
@@ -106,6 +109,7 @@ const VerifyUser = (props: any) => {
   }
 
   async function executeFaceApi(imgUrl: string) {
+    setIsAuthenticated(null);
     let has_success = 0;
 
     const refImage = await faceapi.fetchImage('http://127.0.0.1:54321/storage/v1/object/public/images/my_picture.jpeg');
@@ -115,9 +119,9 @@ const VerifyUser = (props: any) => {
       document.getElementById("canvas");
 
     const refAiData = await faceapi
-      .detectAllFaces(refImage)
+      .detectSingleFace(refImage)
       .withFaceLandmarks()
-      .withFaceDescriptors();
+      .withFaceDescriptor();
 
     let faceMatcher = new faceapi.FaceMatcher(refAiData);
 
@@ -129,7 +133,6 @@ const VerifyUser = (props: any) => {
     if (canvas instanceof HTMLCanvasElement)
       faceapi.matchDimensions(canvas, imageToCheck);
     facesAiData = faceapi.resizeResults(facesAiData, imageToCheck);
-    console.log(facesAiData)
 
     facesAiData.forEach((face) => {
       const { detection, descriptor } = face;
@@ -159,10 +162,9 @@ const VerifyUser = (props: any) => {
           Verificar face
         </button>
       </div>
-      <ToastContainer position="bottom-center" autoClose={2000} limit={1} />
 
-      <div className="pt-6 flex justify-center">
-        <canvas id="canvas" className="absolute"></canvas>
+      <div className="pt-6 flex flex-col justify-center">
+        {!loading ? <canvas id="canvas" className="absolute"></canvas> : null}
         {!loading ? (
           <img
             id="face"
@@ -196,6 +198,7 @@ const VerifyUser = (props: any) => {
             </div>
           </div>
         )}
+        {!loading ? (isAuthenticated === null ? null : isAuthenticated ? <div className="text-green-500 text-center">Usuário Autenticado</div> : <div className="text-red-500 text-center">Usuário Não Autenticado</div>) : null}
       </div>
     </div>
   );
