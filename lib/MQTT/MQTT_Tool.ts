@@ -78,7 +78,7 @@ export async function listeningAndSaveImage() {
     });
 }
 
-function deconnectMQTT() {
+export async function deconnectMQTT() {
     client.end();
     client.on('close', () => {
         console.log('Conexão MQTT fechada');

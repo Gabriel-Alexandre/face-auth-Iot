@@ -1,6 +1,6 @@
 "use client";
 
-import { connectMQTT, publishMQTT } from "@/lib/MQTT/MQTT_Tool";
+import { connectMQTT, deconnectMQTT, publishMQTT } from "@/lib/MQTT/MQTT_Tool";
 import { TAKE_PICTURE } from "@/utils/consts";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
@@ -45,6 +45,11 @@ const VerifyUser = (props: any) => {
 
     loadFaceApi();
     connect();
+
+    return () => {
+      // deconnectMQTT()
+      console.log('oi')
+    };
   }, []);
 
   const supabase = createClient();
@@ -124,6 +129,7 @@ const VerifyUser = (props: any) => {
     if (canvas instanceof HTMLCanvasElement)
       faceapi.matchDimensions(canvas, imageToCheck);
     facesAiData = faceapi.resizeResults(facesAiData, imageToCheck);
+    console.log(facesAiData)
 
     facesAiData.forEach((face) => {
       const { detection, descriptor } = face;
