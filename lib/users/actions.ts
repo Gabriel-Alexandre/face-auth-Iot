@@ -11,7 +11,7 @@ export const createUserTable = async (data_user: any) => {
             {
                 name: 'User',
                 email: data_user.email,
-                image_url: 'http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z',
+                image_url: 'http://127.0.0.1:54321/storage/v1/object/public/images/profile.png?t=2024-07-27T14%3A11%3A40.854Z',
                 user_supabase_id: data_user.user_supabase_id
             },
         ]);

@@ -12,12 +12,13 @@ export default async function ProfilePage() {
   } = await supabase.auth.getUser();
 
   let aux:any = (await getUserById(user?.id))
-  if(!aux) {
-    aux = ['', '', {image_url: "http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z"}]
-  } 
-  const img_url_rep = aux[2].image_url;
-  const img_url = img_url_rep ? img_url_rep : "http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z";
 
+  if(aux[2] === undefined) {
+    aux = ['', '', {image_url: "http://127.0.0.1:54321/storage/v1/object/public/images/profile.png?t=2024-07-27T14%3A11%3A40.854Z", name: 'User'}]
+  } 
+
+  const img_url_rep = aux[2].image_url;
+  const img_url = img_url_rep ? img_url_rep : "http://127.0.0.1:54321/storage/v1/object/public/images/profile.png?t=2024-07-27T14%3A11%3A40.854Z";
   const name = aux[2].name;
 
   if (!user) {
