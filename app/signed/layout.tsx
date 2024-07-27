@@ -11,11 +11,11 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
 
   let aux:any = (await getUserById(user?.id))
   if(aux[2] === undefined) {
-    aux = ['', '', {image_url: "http://127.0.0.1:54321/storage/v1/object/public/images/profile.png?t=2024-07-27T14%3A11%3A40.854Z", name: 'User'}]
+    aux = ['', '', {image_url: "https://yucrypjjssdhpuifavas.supabase.co/storage/v1/object/public/images/profile.png?t=2024-07-27T18%3A10%3A08.612Z", name: 'User'}]
   } 
 
   const img_url_rep = aux[2].image_url;
-  const img_url = img_url_rep ? img_url_rep : "http://127.0.0.1:54321/storage/v1/object/public/images/profile.png?t=2024-07-27T14%3A11%3A40.854Z";
+  const img_url = img_url_rep ? img_url_rep : "https://yucrypjjssdhpuifavas.supabase.co/storage/v1/object/public/images/profile.png?t=2024-07-27T18%3A10%3A08.612Z";
 
   function formatElapsedTime(dateTime: Date): string {
     const currentDate = new Date();
