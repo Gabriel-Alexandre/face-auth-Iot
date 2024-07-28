@@ -112,7 +112,7 @@ const VerifyUser = (props: any) => {
     setIsAuthenticated(null);
     let has_success = 0;
 
-    const refImage = await faceapi.fetchImage('http://127.0.0.1:54321/storage/v1/object/public/images/my_picture.jpeg');
+    const refImage = await faceapi.fetchImage('https://yucrypjjssdhpuifavas.supabase.co/storage/v1/object/public/images/my_picture.jpeg?t=2024-07-28T18%3A47%3A50.602Z');
     const imageToCheck = await faceapi.fetchImage(imgUrl);
 
     const canvas: HTMLElement | null | HTMLCanvasElement =
@@ -172,7 +172,7 @@ const VerifyUser = (props: any) => {
             src={
               imgURL
                 ? imgURL
-                : "http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z"
+                : "https://yucrypjjssdhpuifavas.supabase.co/storage/v1/object/public/images/profile.png?t=2024-07-28T18%3A48%3A33.910Z"
             }
           />
         ) : (

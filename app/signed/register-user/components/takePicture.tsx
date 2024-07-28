@@ -64,7 +64,7 @@ const TakePicture = (props: any) => {
           src={
             props.imgURL
               ? props.imgURL
-              : "http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z"
+              : "https://yucrypjjssdhpuifavas.supabase.co/storage/v1/object/public/images/profile.png?t=2024-07-28T18%3A48%3A33.910Z"
           }
         />
       ) : (
@@ -93,7 +93,7 @@ const TakePicture = (props: any) => {
 
       {props.imgOfTakePicture ? <div className="w-full flex justify-center items-center text-white">
         <span className="text-white pr-2">
-          imagem adiciona com sucesso
+          imagem adicionada com sucesso
         </span>
         <div className="mt-1 cursor-pointer" onClick={() => {props.setImgOfTakePicture(false)}}>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" ><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
