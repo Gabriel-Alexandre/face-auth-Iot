@@ -158,7 +158,7 @@ export const uploadImageUser = async (fileString: any, user_id: string) => {
 
     const { error, data } = await supabase.storage
     .from('users')
-    .upload('public/'+user_id[3]+hournow[1]+'.jpg', file, {
+    .upload('public/'+user_id+"_"+hournow+'.jpg', file, {
         cacheControl: '3600',
         upsert: true,
     });
