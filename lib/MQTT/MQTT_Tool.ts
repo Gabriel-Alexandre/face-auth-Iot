@@ -7,24 +7,29 @@ import { createClient } from "@/utils/supabase/server";
 const client = createMQTTClient();
 
 export async function connectMQTT() {
-    // console.log(client)
-    console.log(client.connected)
-    if(!client.connected) {
+    if (!client.connected) {
         client.on('connect', () => {
-            console.log('Connected')
-            client.subscribe([SUBTOPIC], () => {
-              console.log(`Subscribe to topic '${SUBTOPIC}'`);
-            })
-        }); 
+            console.log('Connected');
+        });
     }
 }
 
+export async function isConnected() {
+    return client.connected;
+}
+
+
 export async function publishMQTT(message: string) {
-    console.log('aquiii', client.connected)
+    if (!client.connected) {
+        await connectMQTT(); // Conectar novamente se necessário
+    }
+
+    client.subscribe([SUBTOPIC], () => {
+        console.log(`Subscribe to topic '${SUBTOPIC}'`);
+    });
 
     let messageToSend = '1';
 
-    // Dexei nessa estrutura caso seja adicionado mais 
     if(message === TAKE_PICTURE) {
         messageToSend = '1';
     } else {
@@ -32,14 +37,12 @@ export async function publishMQTT(message: string) {
     }
 
     await listeningAndSaveImage();
-
-    await client.publish(PUBTOPIC, messageToSend, { qos: 0, retain: false }, (error) => {
+    
+    client.publish(PUBTOPIC, messageToSend, { qos: 0, retain: false }, (error) => {
         if (error) {
             console.error(error);
         }
     });
-
-    // verificar se tem como parar de escutar as mensagens
 
     return "Foto enviada com sucesso!";
 }
@@ -48,34 +51,47 @@ export async function listeningAndSaveImage() {
     const supabase = createClient();
     let imgBase64 = "";
 
-    client.on('message', async (subTopic, payload) => {
-    
-        // console.log('Received Message:', subTopic, payload.toString())
+     // Define o callback do listener
+     async function messageHandler(subTopic: string, payload: Buffer) {
         const response = payload.toString().trim();
-
-        if(response==="123START123") {
+        
+        if (response === "123START123") {
             imgBase64 = "";
-        } else if(response==="123END123") {
+        } else if (response === "123END123") {
             const fileName = `${generateRandomName()}.jpg`;
-            // console.log(imgBase64)
             const file = base64toBlob(imgBase64);
 
-            if(file) {
-                const { error } = await supabase.storage
-                .from('images')
-                .upload('public/'+fileName, file, {
-                    cacheControl: '3600',
-                    upsert: true,
-                });
-
-                if(error) {
-                    console.log(error);
-                }
+            if (file) {
+                supabase.storage
+                    .from('images')
+                    .upload('public/' + fileName, file, {
+                        cacheControl: '3600',
+                        upsert: true,
+                    })
+                    .then(({ error }) => {
+                        if (error) {
+                            console.log(error);
+                        }
+                    });
             }
+
+            // Remove o listener após processar a imagem
+            client.removeListener('message', messageHandler);
+            console.log('Listener para mensagens foi removido.');
+            client.unsubscribe(SUBTOPIC, (error) => {
+                if (error) {
+                    console.error(`Erro ao se desinscrever do tópico '${SUBTOPIC}':`, error);
+                } else {
+                    console.log(`Desinscrito do tópico '${SUBTOPIC}'`);
+                }
+            });
         } else {
             imgBase64 += response;
         }
-    });
+    }
+
+    // Registra o listener para mensagens
+    client.on('message', messageHandler);
 }
 
 export async function deconnectMQTT() {
@@ -108,25 +124,10 @@ function base64toBlob(base64Data: string): Blob | null {
     return blob;
 }
 
-// function generateUid() {
-//     // Gera e retorna um UID aleatório
-//     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-//         var r = Math.random() * 16 | 0,
-//             v = c == 'x' ? r : (r & 0x3 | 0x8);
-//         return v.toString(16);
-//     });
-// }
-
 function generateRandomName() {
-    var adjectives = ['Brave', 'Clever', 'Mighty', 'Swift', 'Fierce', 'Gentle', 'Bold', 'Wise', 'Noble', 'Radiant', 'Majestic', 'Sly', 'Brave1', 'Clever1', 'Mighty1', 'Swift1', 'Fierce1', 'Gentle1', 'Bold1', 'Wise1', 'Noble1', 'Radiant1', 'Majestic1', 'Sly1'];
-var nouns = ['Falcon', 'Panther', 'Leopard', 'Hawk', 'Griffin', 'Kraken', 'Sphinx', 'Basilisk', 'Wyvern', 'Hydra', 'Cerberus', 'Minotaur','Falcon1', 'Panther1', 'Leopard1', 'Hawk1', 'Griffin1', 'Kraken1', 'Sphinx1', 'Basilisk1', 'Wyvern1', 'Hydra1', 'Cerberus1', 'Minotaur1'];
-
-    var randomAdjectiveIndex = Math.floor(Math.random() * adjectives.length);
-    var randomNounIndex = Math.floor(Math.random() * nouns.length);
-    var randomNumber = Math.floor(Math.random() * 10000);
-
-    var randomAdjective = adjectives[randomAdjectiveIndex];
-    var randomNoun = nouns[randomNounIndex];
-
-    return randomAdjective + randomNoun + `${randomNumber}`;
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+            v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { connectMQTT, deconnectMQTT, publishMQTT } from "@/lib/MQTT/MQTT_Tool";
+import { connectMQTT, deconnectMQTT, isConnected, publishMQTT } from "@/lib/MQTT/MQTT_Tool";
 import { TAKE_PICTURE } from "@/utils/consts";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
@@ -13,26 +13,14 @@ const VerifyUser = (props: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [imgURL, setImgURL] = useState<string>();
   const [users, setUsers] = useState<any>();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean| null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [verifyPublisher, setVerifyPublisher] = useState<number>(0); // 0 - OK, 1 - Sucesso, 2- Error
+  const [anyErrorMessage, setAnyErrorMessage] = useState<string | null>("Ocorreu um erro inesperado ao enviar solicitação. Tente novamente.");
 
-  let gam1 = 1;
-  let gam2 = 1;
-  let gam3 = 1;
-  
   useEffect(() => {
-    const connect = async () => {
+    const init = async () => {
       const usersData: any = await getUsers();
       setUsers(usersData[2]);
-
-      try {
-        await connectMQTT();
-        if(gam1) {
-          toast.success("Conectado ao broker com sucesso.");
-          gam1--;
-        }
-      } catch {
-        toast.error("Error ao se conectar com o broker.");
-      }
     };
 
     const loadFaceApi = async () => {
@@ -45,11 +33,10 @@ const VerifyUser = (props: any) => {
     };
 
     loadFaceApi();
-    connect();
+    init();
 
     return () => {
-      // deconnectMQTT()
-      console.log('oi')
+
     };
   }, []);
 
@@ -65,6 +52,7 @@ const VerifyUser = (props: any) => {
         table: "objects",
       },
       async (payload: any) => {
+        setVerifyPublisher(1);
         const folderName = payload.new.name;
 
         const { data } = await supabase.storage
@@ -79,18 +67,11 @@ const VerifyUser = (props: any) => {
         //   response = await executeFaceApi(data.publicUrl, users[i].image_url, users[i].name);
         //   if(response === 1) break
         // }
-        if(response === 1) {
-          if(gam3) {
-            setIsAuthenticated(true);
-            // toast.success("Cliente Autenticado com Sucesso.");
-            gam3 = 0;
-          }
+        if (response === 1) {
+          // toast.success("Cliente Autenticado com Sucesso.");
         } else {
-          if(gam2) {
-            setIsAuthenticated(false);
-            // toast.error("Cliente Não Autenticado.");
-            gam2 = 0;
-          }
+          setIsAuthenticated(false);
+          // toast.error("Cliente Não Autenticado.");
         }
       }
     )
@@ -98,11 +79,15 @@ const VerifyUser = (props: any) => {
 
   async function handleTakePicture() {
     try {
-      gam2 = 1;
-      gam3 = 1;
       setLoading(true);
+      setVerifyPublisher(0);
       await publishMQTT(TAKE_PICTURE);
-      toast.success("Solicitação enviada com sucesso.");
+      // while(true) {
+      //   if(verifyPublisher === 1 || !isConnected()) {
+      //     setLoading(false);
+      //     break;
+      //   }
+      // }
     } catch {
       toast.error("Error no processamento da foto.");
     }
@@ -199,6 +184,7 @@ const VerifyUser = (props: any) => {
           </div>
         )}
         {!loading ? (isAuthenticated === null ? null : isAuthenticated ? <div className="text-green-500 text-center">Usuário Autenticado</div> : <div className="text-red-500 text-center">Usuário Não Autenticado</div>) : null}
+        {!loading ? (verifyPublisher === 2 ? anyErrorMessage : null) : null}
       </div>
     </div>
   );
