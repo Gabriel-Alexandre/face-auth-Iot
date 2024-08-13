@@ -15,7 +15,7 @@ export async function connectMQTT() {
 }
 
 export async function isConnected() {
-    return client.connected;
+    return client.connected; 
 }
 
 

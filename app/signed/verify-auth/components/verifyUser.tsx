@@ -61,7 +61,6 @@ const VerifyUser = (props: any) => {
         setImgURL(data.publicUrl);
         setLoading(false);
         let response: any = 0;
-        console.log(data.publicUrl)
         response = await executeFaceApi(data.publicUrl);
         // for (let i = 0; i < users.length; i++) {
         //   response = await executeFaceApi(data.publicUrl, users[i].image_url, users[i].name);
