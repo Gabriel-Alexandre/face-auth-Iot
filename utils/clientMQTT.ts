@@ -1,4 +1,4 @@
-import mqtt from 'mqtt';
+import mqtt, { MqttClient } from 'mqtt';
 
 export function createMQTTClient() {
     const host = 'mqtt-dashboard.com';

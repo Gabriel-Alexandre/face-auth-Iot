@@ -1,10 +1,10 @@
 "use client";
 
-import { deconnectMQTT, isConnected, publishMQTT } from "@/lib/MQTT/MQTT_Tool";
+import { publishMQTT } from "@/lib/MQTT/MQTT_Tool";
 import { TAKE_PICTURE } from "@/utils/consts";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as faceapi from "face-api.js";
 import { getUsers } from "@/lib/users/queries";
@@ -34,16 +34,7 @@ const VerifyUser = (props: any) => {
 
     loadFaceApi();
     init();
-    
-
-    // return () => {
-    //   const endConnect = async () => {
-    //     if(await isConnected())
-    //       deconnectMQTT();
-    //   };
-      
-    //   endConnect()
-    // };
+  
   }, []);
 
   const supabase = createClient();

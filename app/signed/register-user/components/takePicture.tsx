@@ -1,9 +1,9 @@
 "use client";
 
-import { connectMQTT, publishMQTT } from "@/lib/MQTT/MQTT_Tool";
+import { publishMQTT } from "@/lib/MQTT/MQTT_Tool";
 import { TAKE_PICTURE } from "@/utils/consts";
 import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -11,16 +11,6 @@ const TakePicture = (props: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [imageResponse, setImageResponse] = useState<boolean>(false); // false
 
-  useEffect(() => {
-    const connect = async () => {
-      try {
-        await connectMQTT();
-      } catch {
-        toast.error("Error ao se conectar com o broker.");
-      }
-    };
-    connect();
-  }, []);
 
   const supabase = createClient();
 
