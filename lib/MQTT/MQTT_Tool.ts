@@ -1,28 +1,11 @@
 'use server'
 
-import { createMQTTClient } from "@/utils/clientMQTT";
+import MQTTClientSingleton from "@/utils/mqttSingleton";
 import { SUBTOPIC, PUBTOPIC, TAKE_PICTURE } from "@/utils/consts";
 import { createClient } from "@/utils/supabase/server";
 
-const client = createMQTTClient();
-
-export async function connectMQTT() {
-    if (!client.connected) {
-        client.on('connect', () => {
-            console.log('Connected');
-        });
-    }
-}
-
-export async function isConnected() {
-    return client.connected; 
-}
-
-
 export async function publishMQTT(message: string) {
-    if (!client.connected) {
-        await connectMQTT(); // Conectar novamente se necessário
-    }
+    const client = MQTTClientSingleton.getInstance();
 
     if(client.disconnecting) {
         return 'ERRO: Cliente reconectando...';
@@ -52,13 +35,13 @@ export async function publishMQTT(message: string) {
 }
 
 export async function listeningAndSaveImage() {
+    const client = MQTTClientSingleton.getInstance();
     const supabase = createClient();
     let imgBase64 = "";
 
-     // Define o callback do listener
-     async function messageHandler(subTopic: string, payload: Buffer) {
+    async function messageHandler(subTopic: string, payload: Buffer) {
         const response = payload.toString().trim();
-        
+
         if (response === "123START123") {
             imgBase64 = "";
         } else if (response === "123END123") {
@@ -80,7 +63,6 @@ export async function listeningAndSaveImage() {
                     });
             }
 
-            // Remove o listener após processar a imagem
             client.removeListener('message', messageHandler);
             console.log('Listener para mensagens foi removido.');
             client.unsubscribe(SUBTOPIC, (error) => {
@@ -95,35 +77,22 @@ export async function listeningAndSaveImage() {
         }
     }
 
-    // Registra o listener para mensagens
     client.on('message', messageHandler);
 }
 
-export async function deconnectMQTT() {
-    client.end();
-    client.on('close', () => {
-        console.log('Conexão MQTT fechada');
-    });
-}
-
 function base64toBlob(base64Data: string): Blob | null {
-    // Verifica se a string Base64 é válida
     const validBase64Regex = /^[a-zA-Z0-9+/]*={0,2}$/;
     if (!validBase64Regex.test(base64Data)) {
         console.error("String Base64 inválida");
-        deconnectMQTT();
-        connectMQTT();
         return null;
     }
 
-    // Decodifica a string Base64
     const byteCharacters = atob(base64Data);
     const byteNumbers: number[] = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
 
-    // Cria e retorna o blob
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: 'image/jpeg' });
     return blob;
