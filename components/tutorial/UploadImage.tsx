@@ -18,6 +18,7 @@ const UploadImage = () => {
         .storage
         .from('images')
         .upload('public/'+file.name, file, {
+            contentType: 'image/jpeg',
             cacheControl: '3600',
             upsert: false,
         });

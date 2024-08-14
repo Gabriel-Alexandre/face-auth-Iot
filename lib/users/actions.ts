@@ -33,11 +33,8 @@ export const createClientTable = async (name: string, email: string, phone: stri
 
     const { error: errorimg, data: dataimg } = await supabase.storage
     .from('images')
-    // .upload('public/'+user_id+hournow+'.jpg', file, {
-    //     cacheControl: '3600',
-    //     upsert: true,
-    // });
-    .upload('public/'+name+'.jpg', file, {
+    .upload('public/'+user_id+hournow+'.jpg', file, {
+        contentType: 'image/jpeg',
         cacheControl: '3600',
         upsert: true,
     });
@@ -70,7 +67,7 @@ export const createClientTable = async (name: string, email: string, phone: stri
             .insert([
                 {
                     user_id: user_id,
-                    group_id: 'd942385c-1204-4b9f-aedd-1a962ab3dde7',
+                    group_id: '03b09f3f-00ac-4e72-a176-ecc3fb277e1a',
                     status: 1
                 },
             ]);
@@ -113,7 +110,7 @@ export const createClientTableV2 = async (name: string, email: string, phone: st
         .insert([
             {
                 user_id: user_id,
-                group_id: 'b363e126-bd55-4e95-a98b-38a63292ee37',
+                group_id: '03b09f3f-00ac-4e72-a176-ecc3fb277e1a',
                 status: 1
             },
         ]);
@@ -159,6 +156,7 @@ export const uploadImageUser = async (fileString: any, user_id: string) => {
     const { error, data } = await supabase.storage
     .from('users')
     .upload('public/'+user_id+"_"+hournow+'.jpg', file, {
+        contentType: 'image/jpeg',
         cacheControl: '3600',
         upsert: true,
     });
@@ -197,6 +195,6 @@ function stringToBlob(dataUrl: string): Blob {
     // Converte o conteúdo base64 para um ArrayBuffer
     const arrayBuffer = Uint8Array.from(atob(base64Content), c => c.charCodeAt(0)).buffer;
     // Cria um Blob a partir do ArrayBuffer
-    const blob = new Blob([arrayBuffer], { type: 'application/octet-stream' });
+    const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
     return blob;
-  }
+}

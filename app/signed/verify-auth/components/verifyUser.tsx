@@ -1,6 +1,6 @@
 "use client";
 
-import { connectMQTT, deconnectMQTT, isConnected, publishMQTT } from "@/lib/MQTT/MQTT_Tool";
+import { deconnectMQTT, isConnected, publishMQTT } from "@/lib/MQTT/MQTT_Tool";
 import { TAKE_PICTURE } from "@/utils/consts";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
@@ -34,10 +34,16 @@ const VerifyUser = (props: any) => {
 
     loadFaceApi();
     init();
+    
 
-    return () => {
-
-    };
+    // return () => {
+    //   const endConnect = async () => {
+    //     if(await isConnected())
+    //       deconnectMQTT();
+    //   };
+      
+    //   endConnect()
+    // };
   }, []);
 
   const supabase = createClient();
@@ -61,16 +67,15 @@ const VerifyUser = (props: any) => {
         setImgURL(data.publicUrl);
         setLoading(false);
         let response: any = 0;
-        response = await executeFaceApi(data.publicUrl);
-        // for (let i = 0; i < users.length; i++) {
-        //   response = await executeFaceApi(data.publicUrl, users[i].image_url, users[i].name);
-        //   if(response === 1) break
-        // }
+        // response = await executeFaceApi(data.publicUrl);
+        for (let i = 0; i < users.length; i++) {
+          response = await executeFaceApi(data.publicUrl, users[i].image_url, users[i].name);
+          if(response === 1) break
+        }
         if (response === 1) {
-          // toast.success("Cliente Autenticado com Sucesso.");
+          setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
-          // toast.error("Cliente Não Autenticado.");
         }
       }
     )
@@ -80,7 +85,13 @@ const VerifyUser = (props: any) => {
     try {
       setLoading(true);
       setVerifyPublisher(0);
-      await publishMQTT(TAKE_PICTURE);
+      
+      const response = await publishMQTT(TAKE_PICTURE);
+
+      if(response === "ERRO: Cliente reconectando..." || response === "ERRO: Ocorreu um erro no sistema.") {
+        setLoading(false);
+      }
+
       // while(true) {
       //   if(verifyPublisher === 1 || !isConnected()) {
       //     setLoading(false);
@@ -92,12 +103,12 @@ const VerifyUser = (props: any) => {
     }
   }
 
-  async function executeFaceApi(imgUrl: string) {
+  async function executeFaceApi(imgUrlToCheck: string, imgUrlRef: string, name: string) {
     setIsAuthenticated(null);
     let has_success = 0;
 
     const refImage = await faceapi.fetchImage('https://yucrypjjssdhpuifavas.supabase.co/storage/v1/object/public/images/my_picture.jpeg?t=2024-07-28T18%3A47%3A50.602Z');
-    const imageToCheck = await faceapi.fetchImage(imgUrl);
+    const imageToCheck = await faceapi.fetchImage(imgUrlToCheck);
 
     const canvas: HTMLElement | null | HTMLCanvasElement =
       document.getElementById("canvas");
@@ -121,11 +132,11 @@ const VerifyUser = (props: any) => {
     facesAiData.forEach((face) => {
       const { detection, descriptor } = face;
       let label = faceMatcher.findBestMatch(descriptor).toString();
-      if (label.includes("unknown")) {
+      if (label.includes("Não reconhecido")) {
         return;
       }
 
-      let options = { label: 'Gabriel' };
+      let options = { label: name };
       has_success = 1;
       const drawBox = new faceapi.draw.DrawBox(detection.box, options);
       if (canvas instanceof HTMLCanvasElement) drawBox.draw(canvas);

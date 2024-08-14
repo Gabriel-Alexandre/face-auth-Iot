@@ -18,7 +18,6 @@ const FormAddUser = ({...props}) => {
     if(!props.imgURL) {
       const fileString = await fileToString(file_image);
       const response:any = await createClientTable(name, email, phone, date, props.user.id, fileString);
-      console.log(response)
   
       if (response[0] === 0) {
         toast.error(response[1]);

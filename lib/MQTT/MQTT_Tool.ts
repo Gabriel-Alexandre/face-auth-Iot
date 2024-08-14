@@ -24,6 +24,10 @@ export async function publishMQTT(message: string) {
         await connectMQTT(); // Conectar novamente se necessário
     }
 
+    if(client.disconnecting) {
+        return 'ERRO: Cliente reconectando...';
+    }
+
     client.subscribe([SUBTOPIC], () => {
         console.log(`Subscribe to topic '${SUBTOPIC}'`);
     });
@@ -65,6 +69,7 @@ export async function listeningAndSaveImage() {
                 supabase.storage
                     .from('images')
                     .upload('public/' + fileName, file, {
+                        contentType: 'image/jpeg',
                         cacheControl: '3600',
                         upsert: true,
                     })
