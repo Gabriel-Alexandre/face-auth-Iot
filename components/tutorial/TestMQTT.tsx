@@ -1,6 +1,6 @@
 'use client'
 
-import { connectMQTT, publishMQTT } from "@/lib/MQTT/MQTT_Tool";
+import { publishMQTT } from "@/lib/MQTT/MQTT_Tool";
 import { TAKE_PICTURE } from "@/utils/consts";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
@@ -12,13 +12,13 @@ const TestMQTT = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    const connect = async () => {
-      try{
-        await connectMQTT();
-      } catch {
-        setErroMessage('Erro ao se conectar ao MQTT.')
-      }
-    }
+    // const connect = async () => {
+    //   try{
+    //     await connectMQTT();
+    //   } catch {
+    //     setErroMessage('Erro ao se conectar ao MQTT.')
+    //   }
+    // }
 
     const loadFaceApi = async () => {
       await Promise.all([
@@ -30,7 +30,7 @@ const TestMQTT = () => {
     }
 
     loadFaceApi();
-    connect();
+    // connect();
   }, []);
 
   async function handleTakePicture() {
