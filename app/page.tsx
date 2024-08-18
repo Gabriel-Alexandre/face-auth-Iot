@@ -370,8 +370,8 @@ export default async function Index() {
                   y2="12.9901"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#1724C9" />
-                  <stop offset="1" stop-color="#1C64F2" />
+                  <stop stopColor="#1724C9" />
+                  <stop offset="1" stopColor="#1C64F2" />
                 </linearGradient>
                 <linearGradient
                   id="paint1_linear_11430_22515"
@@ -381,8 +381,8 @@ export default async function Index() {
                   y2="2.33321"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#1C64F2" />
-                  <stop offset="1" stop-color="#0092FF" />
+                  <stop stopColor="#1C64F2" />
+                  <stop offset="1" stopColor="#0092FF" />
                 </linearGradient>
                 <linearGradient
                   id="paint2_linear_11430_22515"
@@ -392,8 +392,8 @@ export default async function Index() {
                   y2="5.99375"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#0092FF" />
-                  <stop offset="1" stop-color="#45B2FF" />
+                  <stop stopColor="#0092FF" />
+                  <stop offset="1" stopColor="#45B2FF" />
                 </linearGradient>
                 <linearGradient
                   id="paint3_linear_11430_22515"
@@ -403,8 +403,8 @@ export default async function Index() {
                   y2="25.8192"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#1C64F2" />
-                  <stop offset="1" stop-color="#0092FF" />
+                  <stop stopColor="#1C64F2" />
+                  <stop offset="1" stopColor="#0092FF" />
                 </linearGradient>
                 <linearGradient
                   id="paint4_linear_11430_22515"
@@ -414,8 +414,8 @@ export default async function Index() {
                   y2="24.1181"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#1724C9" />
-                  <stop offset="1" stop-color="#1C64F2" />
+                  <stop stopColor="#1724C9" />
+                  <stop offset="1" stopColor="#1C64F2" />
                 </linearGradient>
                 <linearGradient
                   id="paint5_linear_11430_22515"
@@ -425,8 +425,8 @@ export default async function Index() {
                   y2="10.6178"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#0092FF" />
-                  <stop offset="1" stop-color="#45B2FF" />
+                  <stop stopColor="#0092FF" />
+                  <stop offset="1" stopColor="#45B2FF" />
                 </linearGradient>
                 <linearGradient
                   id="paint6_linear_11430_22515"
@@ -436,8 +436,8 @@ export default async function Index() {
                   y2="20.4898"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#1C64F2" />
-                  <stop offset="1" stop-color="#0092FF" />
+                  <stop stopColor="#1C64F2" />
+                  <stop offset="1" stopColor="#0092FF" />
                 </linearGradient>
                 <linearGradient
                   id="paint7_linear_11430_22515"
@@ -447,8 +447,8 @@ export default async function Index() {
                   y2="11.488"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#1724C9" />
-                  <stop offset="1" stop-color="#1C64F2" />
+                  <stop stopColor="#1724C9" />
+                  <stop offset="1" stopColor="#1C64F2" />
                 </linearGradient>
                 <linearGradient
                   id="paint8_linear_11430_22515"
@@ -458,8 +458,8 @@ export default async function Index() {
                   y2="31.9579"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#0092FF" />
-                  <stop offset="1" stop-color="#45B2FF" />
+                  <stop stopColor="#0092FF" />
+                  <stop offset="1" stopColor="#45B2FF" />
                 </linearGradient>
               </defs>
             </svg>
