@@ -16,6 +16,7 @@ const VerifyUser = (props: any) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [verifyPublisher, setVerifyPublisher] = useState<number>(0); // 0 - OK, 1 - Sucesso, 2- Error
   const [anyErrorMessage, setAnyErrorMessage] = useState<string | null>("Ocorreu um erro inesperado ao enviar solicitação. Tente novamente.");
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -57,8 +58,10 @@ const VerifyUser = (props: any) => {
           .getPublicUrl(folderName);
         setImgURL(data.publicUrl);
         setLoading(false);
+        const endTime = Date.now();
+        const elapsedTime = endTime - (startTime !== null ? startTime : 0);
+        console.log(`Total processing time: ${elapsedTime} ms`);
         let response: any = 0;
-        // response = await executeFaceApi(data.publicUrl);
         for (let i = 0; i < users.length; i++) {
           response = await executeFaceApi(data.publicUrl, users[i].image_url, users[i].name);
           if(response === 1) break
@@ -68,6 +71,14 @@ const VerifyUser = (props: any) => {
         } else {
           setIsAuthenticated(false);
         }
+
+        // Calculate and log the elapsed time
+        if (startTime !== null) {
+          const endTime = Date.now();
+          const elapsedTime = endTime - startTime;
+          console.log(`Total processing time: ${elapsedTime} ms`);
+          setStartTime(null); // Reset start time
+        }
       }
     )
     .subscribe();
@@ -76,11 +87,13 @@ const VerifyUser = (props: any) => {
     try {
       setLoading(true);
       setVerifyPublisher(0);
+      setStartTime(Date.now()); // Record the start time
       
       const response = await publishMQTT(TAKE_PICTURE);
 
       if(response === "ERRO: Cliente reconectando..." || response === "ERRO: Ocorreu um erro no sistema.") {
         setLoading(false);
+        setStartTime(null); // Reset start time if there's an error
       }
 
       // while(true) {
@@ -91,6 +104,7 @@ const VerifyUser = (props: any) => {
       // }
     } catch {
       toast.error("Error no processamento da foto.");
+      setStartTime(null); // Reset start time if there's an error
     }
   }
 
@@ -98,7 +112,7 @@ const VerifyUser = (props: any) => {
     setIsAuthenticated(null);
     let has_success = 0;
 
-    const refImage = await faceapi.fetchImage('https://yucrypjjssdhpuifavas.supabase.co/storage/v1/object/public/images/my_picture.jpeg?t=2024-07-28T18%3A47%3A50.602Z');
+    const refImage = await faceapi.fetchImage(`${imgUrlRef}`);
     const imageToCheck = await faceapi.fetchImage(imgUrlToCheck);
 
     const canvas: HTMLElement | null | HTMLCanvasElement =
@@ -109,7 +123,12 @@ const VerifyUser = (props: any) => {
       .withFaceLandmarks()
       .withFaceDescriptor();
 
+
+    console.log('refAiData', refAiData)
+
     let faceMatcher = new faceapi.FaceMatcher(refAiData);
+
+    console.log('faceMatcher', refAiData)
 
     let facesAiData = await faceapi
       .detectAllFaces(imageToCheck)
@@ -119,6 +138,8 @@ const VerifyUser = (props: any) => {
     if (canvas instanceof HTMLCanvasElement)
       faceapi.matchDimensions(canvas, imageToCheck);
     facesAiData = faceapi.resizeResults(facesAiData, imageToCheck);
+
+    console.log('facesAiData', facesAiData)
 
     facesAiData.forEach((face) => {
       const { detection, descriptor } = face;
@@ -132,6 +153,10 @@ const VerifyUser = (props: any) => {
       const drawBox = new faceapi.draw.DrawBox(detection.box, options);
       if (canvas instanceof HTMLCanvasElement) drawBox.draw(canvas);
     });
+
+    const endTime = Date.now();
+    const elapsedTime = endTime - (startTime !== null ? startTime : 0);
+    console.log(`Total processing time: ${elapsedTime} ms`);
 
     return has_success;
   }
