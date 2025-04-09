@@ -68,6 +68,7 @@ export default function Register({
             <input
               className=" border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-400 dark:text-gray-800"
               name="email"
+              defaultValue="novo@exemplo.com"
               placeholder="you@example.com"
               required
             />
@@ -84,6 +85,7 @@ export default function Register({
               className=" border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-400 dark:text-gray-800"
               type="password"
               name="password"
+              defaultValue="senha123"
               placeholder="••••••••"
               required
             />
@@ -100,6 +102,7 @@ export default function Register({
               className=" border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-400 dark:text-gray-800"
               type="password"
               name="password2"
+              defaultValue="senha123"
               placeholder="••••••••"
               required
             />

@@ -11,9 +11,10 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = createClient();
+    // Com o cliente mock, isso não faz nada real, mas mantém a compatibilidade da API
     await supabase.auth.exchangeCodeForSession(code);
   }
 
   // URL to redirect to after sign up process completes
-  return NextResponse.redirect(`${origin}/dashboard`);
+  return NextResponse.redirect(`${origin}/signed/dashboard`);
 }

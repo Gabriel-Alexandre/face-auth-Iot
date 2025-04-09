@@ -26,10 +26,11 @@ export default function Login({
       toast.error(response[1]);
     } else {
       toast.success(response[1]);
-      const newPathName = pathName.replace('login', 'dashboard').replace('auth', 'signed');
-      const url = new URL(newPathName, window.location.origin);
-      const path = url.pathname + url.search;
-      router.push(path);
+      console.log("Login bem-sucedido, redirecionando...");
+      console.log("PathName atual:", pathName);
+      
+      // Redirecionamento direto para o dashboard
+      router.push("/signed/dashboard");
       router.refresh();
     }
     setLoading(false);
@@ -56,6 +57,7 @@ export default function Login({
             <input
               className=" border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-400 dark:text-gray-800"
               name="email"
+              defaultValue="teste@exemplo.com"
               placeholder="you@example.com"
               required
             />
@@ -72,6 +74,7 @@ export default function Login({
               className=" border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-400 dark:text-gray-800"
               type="password"
               name="password"
+              defaultValue="senha123"
               placeholder="••••••••"
               required
             />

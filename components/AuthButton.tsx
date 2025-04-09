@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function AuthButton() {
+  // Aqui estamos usando o cliente mock que foi configurado em utils/supabase/server.ts
   const supabase = createClient();
 
   const {
@@ -12,6 +13,7 @@ export default async function AuthButton() {
   const signOut = async () => {
     "use server";
 
+    // Aqui também estamos usando o cliente mock
     const supabase = createClient();
     await supabase.auth.signOut();
     return redirect("auth/login");

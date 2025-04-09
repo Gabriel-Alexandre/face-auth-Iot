@@ -3,6 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 
 export const createUserTable = async (data_user: any) => {
+    // Aqui estamos usando o cliente mock configurado em utils/supabase/server.ts
     const supabase = createClient();
 
     const { data, error } = await supabase
@@ -24,6 +25,7 @@ export const createUserTable = async (data_user: any) => {
 }
 
 export const createClientTable = async (name: string, email: string, phone: string, date: string, user_id: string, fileString:string) => {
+    // Usando cliente mock para operações de storage e banco de dados
     const supabase = createClient();
     const dataUrl: string = fileString;
     const file: Blob = stringToBlob(dataUrl);
@@ -86,6 +88,7 @@ export const createClientTable = async (name: string, email: string, phone: stri
 }
 
 export const createClientTableV2 = async (name: string, email: string, phone: string, date: string, user_id: string, fileString:string) => {
+    // Usando cliente mock
     const supabase = createClient();
 
     const { data, error } = await supabase
@@ -129,6 +132,7 @@ export const createClientTableV2 = async (name: string, email: string, phone: st
 }
 
 export const updateUserNameTable = async (data_user: any , user_id:any) => {
+    // Usando cliente mock
     const supabase = createClient();
 
     const { data, error } = await supabase
@@ -149,6 +153,7 @@ export const updateUserNameTable = async (data_user: any , user_id:any) => {
 export const uploadImageUser = async (fileString: any, user_id: string) => {
     const dataUrl: string = fileString;
     const file: Blob = stringToBlob(dataUrl);
+    // Usando cliente mock
     const supabase = createClient();
     const now = new Date();
     const hournow = now.toISOString();

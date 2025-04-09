@@ -1,6 +1,7 @@
 'use server'
 
-import { createClient } from "@/utils/supabase/server";
+// import { createClient } from "@/utils/supabase/server";
+import { createMockServerClient } from "@/utils/mock/mockServer";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -8,7 +9,8 @@ export const signIn = async (formData: FormData) => {
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const supabase = createClient();
+    // const supabase = createClient();
+    const supabase = createMockServerClient();
 
     const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -27,7 +29,8 @@ export const signUp = async (formData: FormData) => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const password2 = formData.get("password2") as string;
-    const supabase = createClient();
+    // const supabase = createClient();
+    const supabase = createMockServerClient();
 
     if(password !== password2) {
         return [2, 'As senhas digitadas não são iguais.']
@@ -49,13 +52,15 @@ export const signUp = async (formData: FormData) => {
 };
 
 export const signOut = async () => {
-    const supabase = createClient();
+    // const supabase = createClient();
+    const supabase = createMockServerClient();
     await supabase.auth.signOut();
     return redirect("/");
 };
 
 export const changePassword = async (new_password: string, email: string) => {
-    const supabase = createClient();
+    // const supabase = createClient();
+    const supabase = createMockServerClient();
 
      const { error, data } =  await supabase.auth.updateUser({ password: new_password, email: email })
 
