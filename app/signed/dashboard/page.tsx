@@ -1,8 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import TableUsers from "./components/tableUsers";
-import PizzaChart from "./components/pizzaChart";
 import BarChart from "./components/barChart";
+import ActivityLog from "./components/activityLog";
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -19,41 +19,26 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="w-full flex flex-col justify-center">
-      <h4 className="text-2xl font-bold dark:text-white mb-4 ml-4 text-start">Dashboard</h4>
+    <div className="w-full flex flex-col justify-center p-4">
+      <div className="flex justify-between items-center mb-6">
+        <h4 className="text-2xl font-bold dark:text-white">Dashboard</h4>
+        <div className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+          {new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+        </div>
+      </div>
 
-      <div className="flex">
-        <div className="w-1/2">
-          <TableUsers user={user}/>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+          <TableUsers />
         </div>
 
-        <div className="w-1/2 pl-4 flex flex-col justify-between">
-          <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <BarChart/>
-          </div>
-
-          <div className="mt-4 flex bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            
-            <div>
-              <h3 className="pb-8 pt-2 text-center text-lg font-semibold text-gray-900 whitespace-nowrap dark:text-white">Resumo: Logs do Sistema</h3>
-              
-              <div className="px-6 flex">
-                <div className="flex flex-col items-center">
-                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade Total: {"1050"}</span><br/>
-                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade{`${'(Sucesso): '}`}{"700"}</span><br/>
-                  <span className="text-gray-900 whitespace-nowrap dark:text-white">Quantidade{`${'(Erro): '}`}{"350"}</span>
-                </div>
-              </div>
-
-            </div>
-
-            <div className="flex justify-center bg-white border-l border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-              <div className="flex flex-col px-12 py-2">
-                <PizzaChart/>
-              </div>
-            </div>
-          </div>
+        <div className="bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 p-4">
+          <BarChart/>
         </div>
+      </div>
+      
+      <div className="w-full bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+        <ActivityLog />
       </div>
     </div>
   );
