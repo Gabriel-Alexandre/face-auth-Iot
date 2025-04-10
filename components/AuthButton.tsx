@@ -1,10 +1,10 @@
-import { createClient } from "@/utils/supabase/server";
+import { createMockServerClient } from "@/utils/mock/mockServer";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function AuthButton() {
-  // Aqui estamos usando o cliente mock que foi configurado em utils/supabase/server.ts
-  const supabase = createClient();
+  // Aqui estamos usando o cliente mock que foi configurado em utils/mock/mockServer.ts
+  const supabase = createMockServerClient();
 
   const {
     data: { user },
@@ -14,7 +14,7 @@ export default async function AuthButton() {
     "use server";
 
     // Aqui também estamos usando o cliente mock
-    const supabase = createClient();
+    const supabase = createMockServerClient();
     await supabase.auth.signOut();
     return redirect("auth/login");
   };

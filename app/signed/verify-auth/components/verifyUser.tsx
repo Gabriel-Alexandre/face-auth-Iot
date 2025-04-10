@@ -1,25 +1,46 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, Suspense } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as faceapi from "face-api.js";
-import Webcam from "react-webcam";
 import dynamic from "next/dynamic";
+import type Webcam from "react-webcam";
 
 // Componente Canvas renderizado apenas no cliente
 const ClientOnlyCanvas = dynamic(
-  () => Promise.resolve((props: React.CanvasHTMLAttributes<HTMLCanvasElement>) => 
+  () => Promise.resolve((props: any) => 
     <canvas {...props} />
   ), 
   { ssr: false }
 );
 
+// Função para importar o componente Webcam
+const importWebcam = async () => {
+  const WebcamModule = await import('react-webcam');
+  return WebcamModule.default;
+};
+
 // Componente Webcam renderizado apenas no cliente
-const ClientOnlyWebcam = dynamic<React.ComponentProps<typeof Webcam>>(
-  () => import('react-webcam').then((mod) => mod.default),
-  { ssr: false }
-);
+const ClientOnlyWebcam = (props: any) => {
+  const [WebcamComponent, setWebcamComponent] = useState<any>(null);
+
+  useEffect(() => {
+    importWebcam().then(component => {
+      setWebcamComponent(() => component);
+    });
+  }, []);
+
+  if (!WebcamComponent) {
+    return (
+      <div className="w-[400px] h-[400px] bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+        <p className="text-gray-500 dark:text-gray-400">Carregando webcam...</p>
+      </div>
+    );
+  }
+
+  return <WebcamComponent {...props} />;
+};
 
 const VerifyUser = (props: any) => {
   const [loading, setLoading] = useState<boolean>(false);

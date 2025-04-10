@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/server";
+import { createMockServerClient } from "@/utils/mock/mockServer";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const origin = requestUrl.origin;
 
   if (code) {
-    const supabase = createClient();
+    const supabase = createMockServerClient();
     // Com o cliente mock, isso não faz nada real, mas mantém a compatibilidade da API
     await supabase.auth.exchangeCodeForSession(code);
   }

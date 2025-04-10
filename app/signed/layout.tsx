@@ -1,8 +1,6 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/server";
 import Toggle from "./components/toggle";
-import { getUserById } from "@/lib/users/queries";
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from "react";
 

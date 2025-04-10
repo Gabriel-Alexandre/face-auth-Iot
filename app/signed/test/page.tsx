@@ -1,6 +1,6 @@
 import DeployButton from "@/components/DeployButton";
 import AuthButton from "@/components/AuthButton";
-import { createClient } from "@/utils/supabase/server";
+import { createMockServerClient } from "@/utils/mock/mockServer";
 import FetchDataSteps from "@/components/tutorial/FetchDataSteps";
 import Header from "@/components/Header";
 import { redirect } from "next/navigation";
@@ -9,7 +9,7 @@ import Test from "@/components/tutorial/Test";
 import TestMQTT from "@/components/tutorial/TestMQTT";
 
 export default async function TestPage() {
-  const supabase = createClient();
+  const supabase = createMockServerClient();
 
   const {
     data: { user },

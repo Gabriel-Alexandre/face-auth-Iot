@@ -1,11 +1,11 @@
-import { createClient } from "@/utils/supabase/server";
+import { createMockServerClient } from "@/utils/mock/mockServer";
 import { redirect } from "next/navigation";
 import TableUsers from "./components/tableUsers";
 import BarChart from "./components/barChart";
 import ActivityLog from "./components/activityLog";
 
 export default async function DashboardPage() {
-  const supabase = createClient();
+  const supabase = createMockServerClient();
 
   const {
     data: { user },

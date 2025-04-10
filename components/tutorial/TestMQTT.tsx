@@ -2,7 +2,6 @@
 
 import { publishMQTT } from "@/lib/MQTT/MQTT_Tool";
 import { TAKE_PICTURE } from "@/utils/consts";
-import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import * as faceapi from 'face-api.js';
 
@@ -31,82 +30,103 @@ const TestMQTT = () => {
 
     loadFaceApi();
     // connect();
+    
+    // Simulação de recebimento de imagem (mock do Supabase Realtime)
+    const mockImageListener = () => {
+      // Esta função simula o evento de upload de imagem
+      const mockPublicUrl = '/mock-images/example.jpg'; // URL fictícia para teste
+      
+      // Mock do evento que era anteriormente acionado pelo Realtime do Supabase
+      const simulateImageUpload = () => {
+        setImgURL(mockPublicUrl);
+        setLoading(false);
+        executeFaceApi(mockPublicUrl);
+      };
+      
+      // Retorna a função de limpeza
+      return () => {
+        // Limpeza de recursos (se necessário)
+        console.log('Removendo listener de imagens mock');
+      };
+    };
+    
+    // Iniciar o listener de mock
+    const cleanupMock = mockImageListener();
+    
+    // Limpeza ao desmontar
+    return () => {
+      if (cleanupMock) cleanupMock();
+    };
   }, []);
 
   async function handleTakePicture() {
     try {
       setLoading(true);
       await publishMQTT(TAKE_PICTURE);
+      
+      // Simular recebimento de imagem após um delay (mock da resposta do Supabase)
+      setTimeout(() => {
+        const mockPublicUrl = '/mock-images/example.jpg';
+        setImgURL(mockPublicUrl);
+        setLoading(false);
+        executeFaceApi(mockPublicUrl);
+      }, 2000);
     } catch {
       setErroMessage("Erro ao tirar foto.");
+      setLoading(false);
     }
   }
 
-  const supabase = createClient();
-
-  supabase.channel('images-upload')
-  .on('postgres_changes', {
-    event: '*',
-    schema: 'storage',
-    table: 'objects'
-  }, async (payload: any) => {
-    const folderName = payload.new.name;
-
-    const { data } = await supabase
-    .storage
-    .from('images')
-    .getPublicUrl(folderName);
-    setImgURL(data.publicUrl);
-    setLoading(false);
-    await executeFaceApi(data.publicUrl);
-
-  }).subscribe();
-
   async function executeFaceApi(imgUrl:string) {
-    const refImage = await faceapi.fetchImage('http://127.0.0.1:54321/storage/v1/object/public/images/public/my_picture.png');
-    const imageToCheck = await faceapi.fetchImage(imgUrl);
+    try {
+      // Mock da URL de referência
+      const refImage = await faceapi.fetchImage('/mock-images/reference.jpg');
+      const imageToCheck = await faceapi.fetchImage(imgUrl);
 
-    const canvas: HTMLElement | null | HTMLCanvasElement = document.getElementById('canvas');
+      const canvas: HTMLElement | null | HTMLCanvasElement = document.getElementById('canvas');
 
-    const refAiData = await faceapi
-    .detectAllFaces(refImage)
-    .withFaceLandmarks()
-    .withFaceDescriptors();
+      const refAiData = await faceapi
+      .detectAllFaces(refImage)
+      .withFaceLandmarks()
+      .withFaceDescriptors();
 
-    //build a FaceMatcher with the detection data from
-    //our reference pic results. Can make label in another video
-    //they are automatic
-    let faceMatcher = new faceapi.FaceMatcher(refAiData);
+      //build a FaceMatcher with the detection data from
+      //our reference pic results. Can make label in another video
+      //they are automatic
+      let faceMatcher = new faceapi.FaceMatcher(refAiData);
 
-    //get the faces/ai data from the image we are checking
-    let facesAiData = await faceapi.detectAllFaces(imageToCheck)
-        .withFaceLandmarks()
-        .withFaceDescriptors()
+      //get the faces/ai data from the image we are checking
+      let facesAiData = await faceapi.detectAllFaces(imageToCheck)
+          .withFaceLandmarks()
+          .withFaceDescriptors()
 
 
-    //use faceapi to resize canvas
-    if(canvas instanceof HTMLCanvasElement)
-    faceapi.matchDimensions(canvas, imageToCheck)
-    // resize just in case
-    facesAiData = faceapi.resizeResults(facesAiData, imageToCheck)
+      //use faceapi to resize canvas
+      if(canvas instanceof HTMLCanvasElement)
+      faceapi.matchDimensions(canvas, imageToCheck)
+      // resize just in case
+      facesAiData = faceapi.resizeResults(facesAiData, imageToCheck)
 
-    //loop through all the faces and find the best match from our 
-    //faceMatcher which is the reference image
-    facesAiData.forEach(face => {
-        const { detection, descriptor } = face
-        //make our label from the best match
-        let label = faceMatcher.findBestMatch(descriptor).toString()
-        if(label.includes("unknown")){
-            //if it includes "unkown, stop"
-            return
-        }
-        //otherwise, use our reference info
-        let options = { label: "Gabriel" }
-        const drawBox = new faceapi.draw.DrawBox(detection.box, options)
-        if(canvas instanceof HTMLCanvasElement)
-          drawBox.draw(canvas)
-    })
-
+      //loop through all the faces and find the best match from our 
+      //faceMatcher which is the reference image
+      facesAiData.forEach(face => {
+          const { detection, descriptor } = face
+          //make our label from the best match
+          let label = faceMatcher.findBestMatch(descriptor).toString()
+          if(label.includes("unknown")){
+              //if it includes "unkown, stop"
+              return
+          }
+          //otherwise, use our reference info
+          let options = { label: "Gabriel" }
+          const drawBox = new faceapi.draw.DrawBox(detection.box, options)
+          if(canvas instanceof HTMLCanvasElement)
+            drawBox.draw(canvas)
+      })
+    } catch (error) {
+      console.error("Erro ao executar Face API:", error);
+      setErroMessage("Erro ao processar imagem.");
+    }
   }
 
 

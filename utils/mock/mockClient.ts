@@ -129,6 +129,59 @@ export const createMockClient = () => {
       }
     },
     
+    // Mock do método channel do Supabase
+    channel: (channelName: string) => {
+      return {
+        on: (event: string, config: any, callback?: Function) => {
+          console.log(`Mock: Registrando listener no canal ${channelName} para o evento ${event}`);
+          // Retorna o mesmo objeto para permitir encadeamento
+          return {
+            subscribe: () => {
+              console.log(`Mock: Subscrito no canal ${channelName}`);
+              
+              // Simulação opcional de um evento - descomente para testar
+              // setTimeout(() => {
+              //   if (callback) {
+              //     callback({
+              //       new: { name: 'mock-image.jpg' }
+              //     });
+              //   }
+              // }, 3000);
+              
+              return {};
+            }
+          };
+        }
+      };
+    },
+    
+    // Mock para removeChannel
+    removeChannel: (channel: any) => {
+      console.log('Mock: Removendo canal', channel);
+      return { error: null };
+    },
+    
+    // Mock para storage
+    storage: {
+      from: (bucket: string) => {
+        return {
+          getPublicUrl: (path: string) => {
+            return {
+              data: {
+                publicUrl: `/mock-storage/${bucket}/${path}`
+              }
+            };
+          },
+          upload: (path: string, fileBody: any) => {
+            return {
+              error: null,
+              data: { path }
+            };
+          }
+        };
+      }
+    },
+    
     // Mock other Supabase functionality as needed
     from: (table: string) => {
       return {

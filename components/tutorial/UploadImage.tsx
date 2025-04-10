@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/server";
+// Importação do mock do cliente
 import InputFile from "./InputFile";
 import Test from "./Test";
 
@@ -8,27 +8,20 @@ const UploadImage = () => {
 
         const file: File | null = data.get('file') as unknown as File;
 
-        const supabase = createClient();
-
+        // Simulação de upload usando mock em vez do Supabase
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        // Salvar imagem no banco
-        const { error, data:result } = await supabase
-        .storage
-        .from('images')
-        .upload('public/'+file.name, file, {
-            contentType: 'image/jpeg',
-            cacheControl: '3600',
-            upsert: false,
-        });
-
-      if (error) {
-        console.log(error)
-      }
+        console.log(`Mock: Simulando upload de arquivo ${file.name}`);
+        
+        // Simulação de resposta bem sucedida
+        const result = {
+            path: `public/${file.name}`,
+            fullPath: `/mock-storage/images/public/${file.name}`
+        };
+        
+        return result;
     }
-
-    
 
     return (
         <form action={validateAndUploadProcess}>

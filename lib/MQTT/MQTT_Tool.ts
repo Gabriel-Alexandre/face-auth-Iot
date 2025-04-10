@@ -2,7 +2,6 @@
 
 import MQTTClientSingleton from "@/utils/mqttSingleton";
 import { SUBTOPIC, PUBTOPIC, TAKE_PICTURE } from "@/utils/consts";
-import { createClient } from "@/utils/supabase/server";
 
 export async function publishMQTT(message: string) {
     const client = MQTTClientSingleton.getInstance();
@@ -36,7 +35,7 @@ export async function publishMQTT(message: string) {
 
 export async function listeningAndSaveImage() {
     const client = MQTTClientSingleton.getInstance();
-    const supabase = createClient();
+    // Mock de armazenamento em vez de usar Supabase
     let imgBase64 = "";
 
     async function messageHandler(subTopic: string, payload: Buffer) {
@@ -49,18 +48,13 @@ export async function listeningAndSaveImage() {
             const file = base64toBlob(imgBase64);
 
             if (file) {
-                supabase.storage
-                    .from('images')
-                    .upload('public/' + fileName, file, {
-                        contentType: 'image/jpeg',
-                        cacheControl: '3600',
-                        upsert: true,
-                    })
-                    .then(({ error }) => {
-                        if (error) {
-                            console.log(error);
-                        }
-                    });
+                console.log(`Mock: Imagem "${fileName}" seria salva no armazenamento.`);
+                
+                // Simulação de salvamento bem-sucedido
+                setTimeout(() => {
+                    console.log(`Mock: Imagem "${fileName}" salva com sucesso.`);
+                    // Aqui poderia emitir um evento ou callback se necessário
+                }, 500);
             }
 
             client.removeListener('message', messageHandler);

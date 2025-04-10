@@ -7,7 +7,14 @@ import "react-toastify/dist/ReactToastify.css";
 const FormAddUser = ({...props}) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const createUser = async (userData) => {
+  const createUser = async (userData: {
+    name: string;
+    email: string;
+    phone: string;
+    date: string;
+    userId: string;
+    image: string;
+  }): Promise<[number, string]> => {
     // Simulação de envio para API - substitua por sua implementação real
     return new Promise(resolve => {
       setTimeout(() => {
@@ -28,7 +35,7 @@ const FormAddUser = ({...props}) => {
     const date = formData.get('date') as string;
     
     try {
-      let response;
+      let response: [number, string];
       if (!props.imgURL) {
         const fileInput = document.getElementById('file_input') as HTMLInputElement;
         const file = fileInput?.files?.[0];
