@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function FormProfile(props: any) {
@@ -148,7 +148,6 @@ export default function FormProfile(props: any) {
           </button>
         </div>
       </form>
-      <ToastContainer position="bottom-center" autoClose={2000} />
     </div>
   );
 }
