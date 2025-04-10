@@ -1,38 +1,35 @@
-import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import FormProfile from "./components/formProfile";
 import ProfileContainer from "./components/profileContainer";
-import { getUserById } from "@/lib/users/queries";
 
-export default async function ProfilePage() {
-  const supabase = createClient();
+export default function ProfilePage() {
+  // Simulação de autenticação - em um ambiente real, isso seria substituído por sua lógica de autenticação
+  const isAuthenticated = true;
+  const user = { 
+    id: "user-id",
+    email: "teste@exemplo.com"
+  };
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Dados de perfil de exemplo - substituir por integração com sua API
+  const userData = {
+    name: "Usuário Teste",
+    image_url: "/avatar-placeholder.jpg", // Use uma imagem local em public/
+  };
 
-  let aux:any = (await getUserById(user?.id))
-
-  if(aux[2] === undefined) {
-    aux = ['', '', {image_url: "https://yucrypjjssdhpuifavas.supabase.co/storage/v1/object/public/images/profile.png?t=2024-07-27T18%3A10%3A08.612Z", name: 'User'}]
-  } 
-
-  const img_url_rep = aux[2].image_url;
-  const img_url = img_url_rep ? img_url_rep : "https://yucrypjjssdhpuifavas.supabase.co/storage/v1/object/public/images/profile.png?t=2024-07-27T18%3A10%3A08.612Z";
-  const name = aux[2].name;
-
-  if (!user) {
+  if (!isAuthenticated) {
     return redirect("/auth/login");
   }
 
   return (
-    <div className="w-full flex justify-center">
-
-
-      <div className="w-3/6 pt-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-        <ProfileContainer user={user} name={name} img_url={img_url}/>
+    <div className="w-full flex flex-col justify-center py-8 px-4">
+      <h4 className="text-2xl font-bold dark:text-white mb-6 ml-4 text-start">Perfil do Usuário</h4>
+      
+      <div className="max-w-2xl mx-auto w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
+        <ProfileContainer 
+          user={user} 
+          name={userData.name} 
+          img_url={userData.image_url}
+        />
       </div>
-
     </div>
   );
 }

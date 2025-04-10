@@ -1,21 +1,30 @@
+"use client";
+
 import { createClient } from "@/utils/supabase/server";
 import Toggle from "./components/toggle";
 import { getUserById } from "@/lib/users/queries";
+import { usePathname } from 'next/navigation';
+import { useState, useEffect } from "react";
 
-async function SignedLayout({ children }: React.PropsWithChildren) {
-  const supabase = createClient();
+function SignedLayout({ children }: React.PropsWithChildren) {
+  const pathname = usePathname();
+  const [userData, setUserData] = useState({
+    id: "user-id",
+    email: "teste@exemplo.com",
+    created_at: new Date().toISOString(),
+    image_url: "/avatar-placeholder.jpg",
+    name: "Usuário Teste"
+  });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  let aux:any = (await getUserById(user?.id))
-  if(aux[2] === undefined) {
-    aux = ['', '', {image_url: "https://yucrypjjssdhpuifavas.supabase.co/storage/v1/object/public/images/profile.png?t=2024-07-27T18%3A10%3A08.612Z", name: 'User'}]
-  } 
-
-  const img_url_rep = aux[2].image_url;
-  const img_url = img_url_rep ? img_url_rep : "https://yucrypjjssdhpuifavas.supabase.co/storage/v1/object/public/images/profile.png?t=2024-07-27T18%3A10%3A08.612Z";
+  // Simulação de obtenção de dados do usuário - substituir por sua lógica real
+  useEffect(() => {
+    // Esta seria a chamada real para buscar dados do usuário
+    // const getUserData = async () => {
+    //   const data = await fetchUserData();
+    //   setUserData(data);
+    // };
+    // getUserData();
+  }, []);
 
   function formatElapsedTime(dateTime: Date): string {
     const currentDate = new Date();
@@ -51,6 +60,20 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
     return elapsedTimeStr;
   }
 
+  // Função para verificar qual link está ativo
+  const isActiveLink = (path: string) => {
+    return pathname === path;
+  };
+
+  // Classe para links ativos e inativos
+  const getLinkClass = (path: string) => {
+    return `flex items-center p-2 rounded-lg transition-colors duration-200 ${
+      isActiveLink(path)
+        ? "bg-blue-600 text-white" 
+        : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+    } group`;
+  };
+
   return (
     <div className="w-full flex-grow">
       <div className="w-full flex-grow">
@@ -82,11 +105,22 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
         >
           <div className="h-full flex flex-col px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
             <a href="/signed/dashboard" className="flex items-center ps-2.5 mb-5">
-              <img
-                src="https://flowbite.com/docs/images/logo.svg"
-                className="h-6 me-3 sm:h-7"
-                alt="Flowbite Logo"
-              />
+              <div className="bg-blue-600 p-1 rounded-lg mr-2">
+                <svg
+                  className="h-6 w-6 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
               <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
                 FaceAuth
               </span>
@@ -97,10 +131,14 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
               <li>
                 <a
                   href="/signed/dashboard"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  className={getLinkClass("/signed/dashboard")}
                 >
                   <svg
-                    className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    className={`w-5 h-5 transition duration-75 ${
+                      isActiveLink("/signed/dashboard") 
+                        ? "text-white" 
+                        : "text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    }`}
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -117,10 +155,14 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
               <li>
                 <a
                   href="/signed/register-user"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  className={getLinkClass("/signed/register-user")}
                 >
                   <svg
-                    className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    className={`w-5 h-5 transition duration-75 ${
+                      isActiveLink("/signed/register-user") 
+                        ? "text-white" 
+                        : "text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    }`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
@@ -138,10 +180,14 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
               <li>
                 <a
                   href="/signed/verify-auth"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  className={getLinkClass("/signed/verify-auth")}
                 >
                   <svg
-                    className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    className={`w-5 h-5 transition duration-75 ${
+                      isActiveLink("/signed/verify-auth") 
+                        ? "text-white" 
+                        : "text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    }`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
@@ -154,25 +200,48 @@ async function SignedLayout({ children }: React.PropsWithChildren) {
                   </span>
                 </a>
               </li>
+              
+              {/* Perfil - link adicional */}
+              <li>
+                <a
+                  href="/signed/profile"
+                  className={getLinkClass("/signed/profile")}
+                >
+                  <svg
+                    className={`w-5 h-5 transition duration-75 ${
+                      isActiveLink("/signed/profile") 
+                        ? "text-white" 
+                        : "text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    }`}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
+                  </svg>
+
+                  <span className="flex-1 ms-3 whitespace-nowrap">
+                    Meu Perfil
+                  </span>
+                </a>
+              </li>
             </ul>
 
             <div className="flex flex-1 items-end mb-6">
               <div className="flex justify-center items-center gap-2 ml-2">
                 <img
-                  className="w-10 h-10 rounded-full bg-white"
-                  src={
-                    img_url ? img_url 
-                    : "http://127.0.0.1:54321/storage/v1/object/public/images/user%20(2).png?t=2024-04-17T21%3A02%3A17.543Z"}
+                  className="w-10 h-10 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
+                  src={userData.image_url}
+                  alt="Avatar do usuário"
                 />
                 <div className="font-medium text-sm dark:text-white">
-                  <div>{user?.email}</div>
+                  <div>{userData.email}</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {formatElapsedTime(new Date(`${user?.created_at ? user?.created_at : '1 mês'}`))}
+                    {formatElapsedTime(new Date(userData.created_at))}
                   </div>
                 </div>
                 
                 <Toggle />
-
               </div>
             </div>
           </div>

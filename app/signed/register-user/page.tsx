@@ -1,22 +1,18 @@
-import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import FormAddUser from "./components/formAddUser";
 import ContainerForm from "./components/containerForm";
 
-export default async function RegisterUserPage() {
-  const supabase = createClient();
+export default function RegisterUserPage() {
+  // Simulação de autenticação - em um ambiente real, isso seria substituído por sua lógica de autenticação
+  const isAuthenticated = true;
+  const user = { id: "user-id" };
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
+  if (!isAuthenticated) {
     return redirect("/auth/login");
   }
 
   return (
-    <div className="w-full flex flex-col justify-center">
-      <h4 className="text-2xl font-bold dark:text-white mb-4 ml-4 text-start">Cadastrar Clientes</h4>
+    <div className="w-full flex flex-col justify-center py-8 px-4">
+      <h4 className="text-2xl font-bold dark:text-white mb-6 ml-4 text-start">Cadastrar Clientes</h4>
 
       <ContainerForm user={user}/>
     </div>
